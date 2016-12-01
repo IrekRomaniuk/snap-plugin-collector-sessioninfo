@@ -1,0 +1,28 @@
+version: 1
+schedule:
+  type: "simple"
+  interval: "30s"
+max-failures: 10
+workflow:
+  collect:
+    metrics:
+      /pan/num-active: {}
+    config:
+      API: ""
+      IP: ""
+    process:
+      -
+        plugin_name: "passthru"
+        process: null
+        publish:
+          -
+            plugin_name: "influxdb"
+            config:
+              host: "localhost"
+              port: 8086
+              database: "test"
+              retention: "default"
+              user: "admin"
+              password: "admin"
+              https: false
+              skip-verify: false
