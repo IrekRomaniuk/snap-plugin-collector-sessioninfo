@@ -74,5 +74,4 @@ func TestSessioninfoPlugin(t *testing.T) {
 		})
 	})
 }
-}
 
