@@ -31,6 +31,7 @@ import (
 	"net/http"
 	"crypto/tls"
 	"io/ioutil"
+	"time"
 )
 
 const (
@@ -89,10 +90,22 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	}
 
 	htmlData, err := getHTML(ip + cmd + api)
-	if err != nil { return nil, err }
-	metrics, err := parseSessionInfo("num-active", htmlData)
-	if err != nil { return nil, err }
+	if err != nil { return nil, fmt.Errorf("Error collecting metrics: %v", err) }
 
+	for _, mt := range mts {
+		ns := mt.Namespace()
+
+		val, err := parseSessionInfo("num-active", htmlData)
+		if err != nil {
+			return nil, fmt.Errorf("Error collecting metrics: %v", err)
+		}
+		metric := plugin.MetricType{
+			Namespace_: ns,
+			Data_:      val,
+			Timestamp_: time.Now(),
+		}
+		metrics = append(metrics, metric)
+	}
 	return metrics, nil
 }
 
