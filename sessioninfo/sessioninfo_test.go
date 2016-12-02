@@ -83,14 +83,16 @@ func TestSessioninfoPlugin(t *testing.T) {
 }
 
 func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
-	reader := bufio.NewReader(os.Stdin)
+	var (
+		api string
+		ip string
+	)
 	fmt.Print("Enter api key: ")
-	api, _ := reader.ReadString('\n')
-	reader = bufio.NewReader(os.Stdin)
+	fmt.Scanln(&api)
 	fmt.Print("Enter ip address: ")
-	ip, _ := reader.ReadString('\n')
+	fmt.Scanln(&ip)
 	cfg := setupCfg(api,ip,"&cmd=<show><session><info/></session></show>")
-	fmt.Println(api)
+	fmt.Println(api, ip)
 	Convey("Sessioninfo collector", t, func() {
 		p := New()
 		mt, err := p.GetMetricTypes(cfg)
