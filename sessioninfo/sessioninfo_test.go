@@ -115,7 +115,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 			So(metrics[0].Namespace()[1].Value, ShouldEqual, "sessioninfo")
 			for _, m := range metrics {
 				fmt.Println(m.Namespace()[2].Value,m.Data())
-				So(m.Namespace()[2].Value, ShouldBeIn, "num-active")
+				So(m.Namespace()[2].Value, ShouldEqual, "num-active")
 				t.Log(m.Namespace()[2].Value, m.Data())
 			}
 		})
