@@ -63,21 +63,32 @@ The output is the collected metrics as plugin.Metric and an error.
 func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
 	var err error
 
+	var (
+		api string
+		ip string
+		cmd string
+	)
 	conf := mts[0].Config().Table()
-	api, ok := conf["api"]
-	if !ok || api.(ctypes.ConfigValueStr).Value == "" {
+	apiConf, ok := conf["api"]
+	if !ok || apiConf.(ctypes.ConfigValueStr).Value == "" {
 		return nil, fmt.Errorf("api key missing from config, %v", conf)
+	} else {
+		api = apiConf.(ctypes.ConfigValueStr).Value
 	}
-	ip, ok := conf["ip"]
-	if !ok || ip.(ctypes.ConfigValueStr).Value == "" {
+	ipConf, ok := conf["ip"]
+	if !ok || ipConf.(ctypes.ConfigValueStr).Value == "" {
 		return nil, fmt.Errorf("ip address missing from config, %v", conf)
+	} else {
+		ip = ipConf.(ctypes.ConfigValueStr).Value
 	}
-	cmd, ok := conf["cmd"]
-	if !ok || cmd.(ctypes.ConfigValueStr).Value == "" {
+	cmdConf, ok := conf["cmd"]
+	if !ok || cmdConf.(ctypes.ConfigValueStr).Value == "" {
 		return nil, fmt.Errorf("cmd missing from config, %v", conf)
+	} else {
+		cmd = cmdConf.(ctypes.ConfigValueStr).Value
 	}
 
-	metrics, err := parseSessionInfo("num-active", getHTML(""+ ip + cmd + api))
+	metrics, err := parseSessionInfo("num-active", getHTML(ip + cmd + api))
 	if err != nil { return nil, err }
 
 	return metrics, nil
