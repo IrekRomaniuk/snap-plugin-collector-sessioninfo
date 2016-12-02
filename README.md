@@ -9,5 +9,7 @@ $snaptel task create -t task.yml
 
 
 #### testing
+cd $GOPATH//src/github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/
+go test
 cd $GOPATH//src/github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/sessioninfo
 go test
