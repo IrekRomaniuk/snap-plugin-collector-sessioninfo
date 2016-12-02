@@ -29,84 +29,88 @@ $ go get -u github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
 ```
 ### Configuration and Usage
 * Set up the [snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started).
-* Load the plugin and create a task, see example in [Examples](https://github.com/IrekRomaniuk/snap-plugin-collector-ping/blob/master/README.md#examples).
+* Load the plugin and create a task, see example in [Examples](https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/tree/master/examples).
 
 ## Documentation
 
 ### Collected Metrics
 
-List of collected metrics is described in [METRICS.md](https://github.com/raintank/snap-plugin-collector-ping/blob/master/METRICS.md).
+List of collected metrics is described in [METRICS.md](https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/blob/master/METRICS.md).
 
 ### Example
-Example running ping collector and writing data to a file.
+Example running ping collector and writing data to a database.
 
 Load ping plugin
 ```
-$ $SNAP_PATH/bin/snaptel plugin load snap-plugin-collector-sessioninfo
+$ snaptel plugin load snap-plugin-collector-sessioninfo
 ```
 See available metrics for your system
 ```
-$ $SNAP_PATH/bin/snaptel metric list
+$ snaptel metric list
 ```
 
-Create a task manifest file  (exemplary files in [examples/tasks/] (https://github.com/raintank/snap-plugin-collector-ping/blob/master/examples/)):
-```json
-{
-    "version": 1,
-    "schedule": {
-        "type": "simple",
-        "interval": "1s"
-    },
-    "workflow": {
-        "collect": {
-            "metrics": {
-                "/raintank/ping/*": {}
-            },
-            "config": {
-            	"/raintank/ping": {
-            		"hostname": "127.0.0.1"
-            	}
-            },
-            "process": null,
-            "publish": [
-                {
-                    "plugin_name": "file",
-                    "config": {
-                        "file": "/tmp/published_ping"
-                    }
-                }
-            ]
-        }
-    }
-}
+Create a task manifest file  (exemplary files in [examples] (https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/blob/master/examples/task.yml):
+```yaml
+version: 1
+schedule:
+  type: "simple"
+  interval: "30s"
+max-failures: 10
+workflow:
+  collect:
+    metrics:
+      /pan/sessioninfo/num-active: {}
+    config:
+      /pan/sessioninfo:
+        api: ""
+        ip: ""
+        cmd: "&cmd=<show><session><info/></session></show>"
+    process:
+      -
+        plugin_name: "passthru"
+        process: null
+        publish:
+          -
+            plugin_name: "influxdb"
+            config:
+              host: "localhost"
+              port: 8086
+              database: "test"
+              retention: "default"
+              user: "admin"
+              password: "admin"
+              https: false
+              skip-verify: false
 ```
 Load file plugin for publishing:
 ```
-$ $SNAP_PATH/bin/snaptel plugin load $SNAP_PATH/plugin/snap-plugin-publisher-file
-Plugin loaded
-Name: file
-Version: 3
-Type: publisher
-Signed: false
-Loaded Time: Fri, 20 Nov 2015 11:41:39 PST
+$ snaptel plugin load snap-plugin-publisher-influxdb
 ```
 
 Create a task:
 ```
-$ $SNAP_PATH/bin/snaptel task create -t examples/tasks/task.yml
+$ snaptel task create -t task.yml
 Using task manifest to create task
 Task created
-ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
-Name: Task-02dd7ff4-8106-47e9-8b86-70067cd0a850
+ID: 031c21b1-475b-41a6-8053-675fff2c9b9d
+Name: Task-031c21b1-475b-41a6-8053-675fff2c9b9d
 State: Running
 ```
 
-Stop previously created task:
+List running tasks:
 ```
-$ $SNAP_PATH/bin/snaptel task stop 02dd7ff4-8106-47e9-8b86-70067cd0a850
-Task stopped:
-ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
+$ snaptel task list
+ID                                       NAME                                            STATE           HIT     MISS    FAIL    CREATED                 LAST FAILURE
+031c21b1-475b-41a6-8053-675fff2c9b9d     Task-031c21b1-475b-41a6-8053-675fff2c9b9d       Running         0       0       0       3:01PM 12-02-2016
 ```
+Watch the task
+```
+$snaptel task watch 031c21b1-475b-41a6-8053-675fff2c9b9d
+Watching Task (031c21b1-475b-41a6-8053-675fff2c9b9d):
+NAMESPACE                        DATA            TIMESTAMP
+/pan/sessioninfo/num-active      105291          2016-12-02 15:26:46.915443395 -0500 EST
+```
+
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
