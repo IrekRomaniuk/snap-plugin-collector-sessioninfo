@@ -48,7 +48,7 @@ type SessioninfoCollector struct {
 }
 
 func New() *SessioninfoCollector {
-	sessioninfo := &SessioninfoCollector
+	sessioninfo := &SessioninfoCollector{}
 	return sessioninfo
 }
 
@@ -71,6 +71,10 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	ip, ok := conf["ip"]
 	if !ok || ip.(ctypes.ConfigValueStr).Value == "" {
 		return nil, fmt.Errorf("ip address missing from config, %v", conf)
+	}
+	cmd, ok := conf["cmd"]
+	if !ok || cmd.(ctypes.ConfigValueStr).Value == "" {
+		return nil, fmt.Errorf("cmd missing from config, %v", conf)
 	}
 
 	metrics, err := parseSessionInfo("num-active", getHTML(ip + cmd + api))
