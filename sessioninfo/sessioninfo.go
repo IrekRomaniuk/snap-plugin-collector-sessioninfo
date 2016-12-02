@@ -44,10 +44,12 @@ const (
 
 /*func init() {
 }*/
+var (
+	metricNames = []string{
+		"num-active",
+	}
+)
 
-metricNames = []string{
-"num-active"
-}
 
 type SessioninfoCollector struct {
 }
