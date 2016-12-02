@@ -24,28 +24,40 @@ import (
 	"math/rand"
 	"time"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
-	//"github.com/intelsdi-x/snap/control/plugin"
+	//"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
+	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
+	"github.com/intelsdi-x/snap/core/ctypes"
 	"strings"
 	"net/http"
 	"crypto/tls"
 	"io/ioutil"
 )
 
-var (
-	strs = []string{
-		"It is certain",
-		"Very doubtful",
-	}
+const (
+	vendor        = "pan"
+	fs            = "sessioninfo"
+	pluginName    = "sessioninfo"
+	pluginVersion = 1
+	pluginType    = plugin.CollectorPluginType
 )
 
-func init() {
-	rand.Seed(42)
-}
+/*func init() {
+}*/
 
 // Mock collector implementation used for testing
-type RandCollector struct {
+/*type sessioninfoCollector struct {
+}*/
+// based on ping and netstat collectors
+type Sessioninfo struct {
 }
+
+func New() *SessioninfoCollector {
+	sessioninfo := &SessioninfoCollector
+	return sessioninfo
+}
+
 
 /*  CollectMetrics collects metrics for testing.
 
@@ -54,41 +66,25 @@ GetMetricTypes() is started. The input will include a slice of all the metric ty
 
 The output is the collected metrics as plugin.Metric and an error.
 */
-func (RandCollector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error) {
-	metrics := []plugin.Metric{}
-	for idx, mt := range mts {
-		mts[idx].Timestamp = time.Now()
-		if val, err := mt.Config.GetBool("testbool"); err == nil && val {
-			continue
-		}
-		if mt.Namespace[len(mt.Namespace)-1].Value == "integer" {
-			if val, err := mt.Config.GetInt("testint"); err == nil {
-				mts[idx].Data = val
-			} else {
-				mts[idx].Data = rand.Int31()
-			}
-			metrics = append(metrics, mts[idx])
-		} else if mt.Namespace[len(mt.Namespace)-1].Value == "float" {
-			if val, err := mt.Config.GetFloat("testfloat"); err == nil {
-				mts[idx].Data = val
-			} else {
-				mts[idx].Data = rand.Float64()
-			}
-			metrics = append(metrics, mts[idx])
-		} else if mt.Namespace[len(mt.Namespace)-1].Value == "string" {
-			if val, err := mt.Config.GetString("teststring"); err == nil {
-				mts[idx].Data = val
-			} else {
-				mts[idx].Data = strs[rand.Intn(len(strs)-1)]
-			}
-			metrics = append(metrics, mts[idx])
-		} else {
-			return nil, fmt.Errorf("Invalid metric: %v", mt.Namespace.Strings())
-		}
+func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
+	var err error
+
+	conf := mts[0].Config().Table()
+	api, ok := conf["api"]
+	if !ok || api.(ctypes.ConfigValueStr).Value == "" {
+		return nil, fmt.Errorf("api key missing from config, %v", conf)
 	}
+	ip, ok := conf["ip"]
+	if !ok || ip.(ctypes.ConfigValueStr).Value == "" {
+		return nil, fmt.Errorf("ip address missing from config, %v", conf)
+	}
+
+	metrics, err := parseSessionInfo("num-active", getHTML(ip + "&cmd=<show><session><info/></session></show>" + api))
+	if err != nil { return nil, err }
+
 	return metrics, nil
 }
-//parseSessionInfo("num-active", getHTML(IP + "&cmd=<show><session><info/></session></show>" + API))
+
 func getHTML (url string ) string {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -102,12 +98,12 @@ func getHTML (url string ) string {
 	return string(htmlData)
 }
 //HTML parse should go to snap-plugin-processor ?
-func parseSessionInfo (tag string, htmlData string, p string) (string, string) {
+func parseSessionInfo (tag string, htmlData string) (string, string) {
 	htmlCode := strings.NewReader(htmlData)
 	doc, err := goquery.NewDocumentFromReader(htmlCode)
 	if err != nil { log.Fatal(err) }
 	s := doc.Find(tag).Text()
-	return s, p
+	return s
 }
 
 /*
@@ -119,51 +115,38 @@ func parseSessionInfo (tag string, htmlData string, p string) (string, string) {
 
 	The metrics returned will be advertised to users who list all the metrics and will become targetable by tasks.
 */
-func (RandCollector) GetMetricTypes(cfg plugin.Config) ([]plugin.Metric, error) {
-	metrics := []plugin.Metric{}
-
-	vals := []string{"integer", "float", "string"}
-	for _, val := range vals {
-		metric := plugin.Metric{
-			Namespace: plugin.NewNamespace("random", val),
-			Version:   1,
-		}
-		metrics = append(metrics, metric)
+func (sessioninfo *SessioninfoCollector) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, error) {
+	mts := []plugin.MetricType{}
+	for _, metricName := range metricNames {
+		mts = append(mts, plugin.MetricType{
+			Namespace_: core.NewNamespace("pan", "sessioninfo", metricName),
+		})
 	}
-
-	return metrics, nil
-}
-
-/*
-	GetConfigPolicy() returns the configPolicy for your plugin.
-
-	A config policy is how users can provide configuration info to
-	plugin. Here you define what sorts of config info your plugin
-	needs and/or requires.
-*/
-func (RandCollector) GetConfigPolicy() (plugin.ConfigPolicy, error) {
-	policy := plugin.NewConfigPolicy()
-
-	policy.AddNewIntRule([]string{"random", "integer"},
-		"testint",
-		false,
-		plugin.SetMaxInt(1000),
-		plugin.SetMinInt(0))
-
-	policy.AddNewFloatRule([]string{"random", "float"},
-		"testfloat",
-		false,
-		plugin.SetMaxFloat(1000.0),
-		plugin.SetMinFloat(0.0))
-
-	policy.AddNewStringRule([]string{"random", "string"},
-		"teststring",
-		false)
-
-	policy.AddNewBoolRule([]string{"random"},
-		"testbool",
-		false)
-	return *policy, nil
+	return mts, nil
 }
 
 
+// GetConfigPolicy returns plugin configuration
+func (sessioninfo *SessioninfoCollector) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
+	c := cpolicy.New()
+	rule0, _ := cpolicy.NewStringRule("api", true)
+	rule1, _ := cpolicy.NewStringRule("ip", true)
+	cp := cpolicy.NewPolicyNode()
+	cp.Add(rule0)
+	cp.Add(rule1)
+	c.Add([]string{"pan", "sessioninfo"}, cp)
+	return c, nil
+}
+
+//Meta returns meta data for testing
+func Meta() *plugin.PluginMeta {
+	return plugin.NewPluginMeta(
+		pluginName,
+		pluginVersion,
+		pluginType,
+		[]string{plugin.SnapGOBContentType},//[]string{},
+		[]string{plugin.SnapGOBContentType},
+		plugin.Unsecure(true),
+		plugin.ConcurrencyCount(1),
+	)
+}

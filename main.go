@@ -21,15 +21,17 @@ package main
 
 import (
 	"github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/sessioninfo"
-	"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
-	//"github.com/intelsdi-x/snap/control/plugin"
+	//"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
+	"github.com/intelsdi-x/snap/control/plugin"
+	"os"
 )
 
-const (
-	pluginName    = "snap-plugin-collector-sessioninfo"
+/*const (
+	pluginName    = "sessioninfo"
 	pluginVersion = 1
-)
+)*/
 
 func main() {
-	plugin.StartCollector(sessioninfo.sessioninfoCollector{}, pluginName, pluginVersion)
+	//plugin.StartCollector(sessioninfo.sessioninfoCollector{}, pluginName, pluginVersion)
+	plugin.Start(sessioninfo.Meta(), sessioninfo.New(), os.Args[1],)
 }

@@ -6,10 +6,10 @@ max-failures: 10
 workflow:
   collect:
     metrics:
-      /pan/num-active: {}
+      /pan/sessioninfo/num-active: {}
     config:
-      API: ""
-      IP: ""
+      api: ""
+      ip: ""
     process:
       -
         plugin_name: "passthru"
