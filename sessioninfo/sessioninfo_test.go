@@ -100,7 +100,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 				},
 
 			}
-			fmt.Println(mts)
+			fmt.Println(mts[0].Config().Table())
 			metrics, err := p.CollectMetrics(mts)
 			So(err, ShouldBeNil)
 			So(metrics, ShouldNotBeNil)
