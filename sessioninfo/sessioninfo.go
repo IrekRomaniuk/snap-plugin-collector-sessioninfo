@@ -21,8 +21,6 @@ package sessioninfo
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 	"github.com/PuerkitoBio/goquery"
 	//"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
 	"github.com/intelsdi-x/snap/control/plugin"
@@ -46,11 +44,7 @@ const (
 /*func init() {
 }*/
 
-// Mock collector implementation used for testing
-/*type sessioninfoCollector struct {
-}*/
-// based on ping and netstat collectors
-type Sessioninfo struct {
+type SessioninfoCollector struct {
 }
 
 func New() *SessioninfoCollector {
@@ -79,7 +73,7 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 		return nil, fmt.Errorf("ip address missing from config, %v", conf)
 	}
 
-	metrics, err := parseSessionInfo("num-active", getHTML(ip + "&cmd=<show><session><info/></session></show>" + api))
+	metrics, err := parseSessionInfo("num-active", getHTML(ip + cmd + api))
 	if err != nil { return nil, err }
 
 	return metrics, nil
@@ -131,9 +125,11 @@ func (sessioninfo *SessioninfoCollector) GetConfigPolicy() (*cpolicy.ConfigPolic
 	c := cpolicy.New()
 	rule0, _ := cpolicy.NewStringRule("api", true)
 	rule1, _ := cpolicy.NewStringRule("ip", true)
+	rule2, _ := cpolicy.NewStringRule("cmd", true)
 	cp := cpolicy.NewPolicyNode()
 	cp.Add(rule0)
 	cp.Add(rule1)
+	cp.Add(rule2)
 	c.Add([]string{"pan", "sessioninfo"}, cp)
 	return c, nil
 }

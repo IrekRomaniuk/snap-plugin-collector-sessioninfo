@@ -10,6 +10,7 @@ workflow:
     config:
       api: ""
       ip: ""
+      cmd: "&cmd=<show><session><info/></session></show>"
     process:
       -
         plugin_name: "passthru"
