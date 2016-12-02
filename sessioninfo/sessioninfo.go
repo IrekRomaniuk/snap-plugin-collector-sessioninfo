@@ -88,7 +88,9 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 		cmd = cmdConf.(ctypes.ConfigValueStr).Value
 	}
 
-	metrics, err := parseSessionInfo("num-active", getHTML(ip + cmd + api))
+	htmlData, err := getHTML(ip + cmd + api)
+	if err != nil { return nil, err }
+	metrics, err := parseSessionInfo("num-active", htmlData)
 	if err != nil { return nil, err }
 
 	return metrics, nil
@@ -107,12 +109,12 @@ func getHTML (url string ) (string, error) {
 	return string(htmlData), nil
 }
 //HTML parse should go to snap-plugin-processor ?
-func parseSessionInfo (tag string, htmlData string) (string, string) {
+func parseSessionInfo (tag string, htmlData string) (string, error) {
 	htmlCode := strings.NewReader(htmlData)
 	doc, err := goquery.NewDocumentFromReader(htmlCode)
-	if err != nil { log.Fatal(err) }
+	if err != nil { return nil, err }
 	s := doc.Find(tag).Text()
-	return s
+	return s, nil
 }
 
 /*
