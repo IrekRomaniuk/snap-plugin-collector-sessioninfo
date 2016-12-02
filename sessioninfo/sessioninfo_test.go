@@ -31,6 +31,12 @@ import (
 	"fmt"
 )
 
+const (
+	//put your api key and ip address here
+	api = ""
+	ip = "10.34.2.21"
+)
+
 func TestSessioninfoPlugin(t *testing.T) {
 	Convey("Meta should return metadata for the plugin", t, func() {
 		meta := Meta()
@@ -81,16 +87,8 @@ func TestSessioninfoPlugin(t *testing.T) {
 }
 
 func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
-	var (
-		api string
-		ip string
-	)
-	fmt.Print("Enter api key: ")
-	fmt.Scanln(&api)
-	fmt.Print("Enter ip address: ")
-	fmt.Scanln(&ip)
 	cfg := setupCfg(api,ip,"&cmd=<show><session><info/></session></show>")
-	fmt.Println(api, ip)
+	//fmt.Println(api, ip)
 	Convey("Sessioninfo collector", t, func() {
 		p := New()
 		mt, err := p.GetMetricTypes(cfg)
