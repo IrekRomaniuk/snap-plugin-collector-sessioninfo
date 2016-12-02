@@ -29,8 +29,6 @@ import (
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 	"fmt"
-	"bufio"
-	"os"
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
