@@ -45,6 +45,10 @@ const (
 /*func init() {
 }*/
 
+metricNames = []string{
+"num-active"
+}
+
 type SessioninfoCollector struct {
 }
 
@@ -114,9 +118,9 @@ func getHTML (url string ) (string, error) {
 	}
 	client := &http.Client{Transport: tr}
 	resp, err := client.Get(url)
-	if err != nil { return nil, err }
+	if err != nil { return "", err }
 	htmlData, err := ioutil.ReadAll(resp.Body)
-	if err != nil { return nil, err }
+	if err != nil { return "", err }
 	resp.Body.Close()
 	return string(htmlData), nil
 }
@@ -124,7 +128,7 @@ func getHTML (url string ) (string, error) {
 func parseSessionInfo (tag string, htmlData string) (string, error) {
 	htmlCode := strings.NewReader(htmlData)
 	doc, err := goquery.NewDocumentFromReader(htmlCode)
-	if err != nil { return nil, err }
+	if err != nil { return "", err }
 	s := doc.Find(tag).Text()
 	return s, nil
 }
