@@ -116,7 +116,7 @@ Watching Task (031c21b1-475b-41a6-8053-675fff2c9b9d):
 NAMESPACE                        DATA            TIMESTAMP
 /pan/sessioninfo/num-active      105291          2016-12-02 15:26:46.915443395 -0500 EST
 ```
-Watch metrics in real-time using snap plugin for Grafana [examples] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/)
+Watch metrics in real-time using [snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/)
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
