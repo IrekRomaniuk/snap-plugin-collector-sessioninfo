@@ -40,7 +40,7 @@ func TestSessioninfoPlugin(t *testing.T) {
 			So(collector, ShouldNotBeNil)
 		})
 		Convey("So Sessioninfo collector should be of Sessioninfo type", func() {
-			So(collector, ShouldHaveSameTypeAs, &Sessioninfo{})
+			So(collector, ShouldHaveSameTypeAs, sessioninfo)
 		})
 		Convey("collector.GetConfigPolicy() should return a config policy", func() {
 			configPolicy, _ := collector.GetConfigPolicy()
