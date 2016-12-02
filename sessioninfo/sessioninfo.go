@@ -77,23 +77,23 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 		return nil, fmt.Errorf("cmd missing from config, %v", conf)
 	}
 
-	metrics, err := parseSessionInfo("num-active", getHTML(ip + cmd + api))
+	metrics, err := parseSessionInfo("num-active", getHTML(""+ ip + cmd + api))
 	if err != nil { return nil, err }
 
 	return metrics, nil
 }
 
-func getHTML (url string ) string {
+func getHTML (url string ) (string, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
 	resp, err := client.Get(url)
-	if err != nil { log.Fatal(err) }
+	if err != nil { return nil, err }
 	htmlData, err := ioutil.ReadAll(resp.Body)
-	if err != nil { log.Fatal(err) }
+	if err != nil { return nil, err }
 	resp.Body.Close()
-	return string(htmlData)
+	return string(htmlData), nil
 }
 //HTML parse should go to snap-plugin-processor ?
 func parseSessionInfo (tag string, htmlData string) (string, string) {
