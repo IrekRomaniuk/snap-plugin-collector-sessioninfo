@@ -28,6 +28,7 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
+	"fmt"
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
@@ -108,6 +109,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 			So(metrics[0].Namespace()[1].Value, ShouldEqual, "sessioninfo")
 			for _, m := range metrics {
 				So(m.Namespace()[2].Value, ShouldBeIn, "num-active")
+				fmt.Println(m.Namespace()[2].Value,m.Data())
 				t.Log(m.Namespace()[2].Value, m.Data())
 			}
 		})
