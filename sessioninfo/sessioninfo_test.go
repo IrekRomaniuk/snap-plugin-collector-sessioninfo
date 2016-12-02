@@ -76,3 +76,44 @@ func TestSessioninfoPlugin(t *testing.T) {
 	})
 }
 
+func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
+	cfg := setupCfg("paste api key here","10.34.2.21","&cmd=<show><session><info/></session></show>")
+
+	Convey("Sessioninfo collector", t, func() {
+		p := New()
+		mt, err := p.GetMetricTypes(cfg)
+		if err != nil {
+			t.Fatal(err)
+		}
+		So(len(mt), ShouldEqual, 1)
+
+		Convey("collect metrics", func() {
+			mts := []plugin.MetricType{
+				plugin.MetricType{
+					Namespace_: core.NewNamespace(
+						"pan", "sessioninfo", "sessioninfo"),
+					Config_: cfg.ConfigDataNode,
+				},
+
+			}
+			metrics, err := p.CollectMetrics(mts)
+			So(err, ShouldBeNil)
+			So(metrics, ShouldNotBeNil)
+			So(len(metrics), ShouldEqual, 1)
+			So(metrics[0].Namespace()[0].Value, ShouldEqual, "pan")
+			So(metrics[0].Namespace()[1].Value, ShouldEqual, "sessioninfo")
+			for _, m := range metrics {
+				So(m.Namespace()[2].Value, ShouldBeIn, "num-active")
+				t.Log(m.Namespace()[2].Value, m.Data())
+			}
+		})
+	})
+}
+
+func setupCfg(api string, ip string, cmd string) plugin.ConfigType {
+	node := cdata.NewNode()
+	node.AddItem("api", ctypes.ConfigValueStr{Value: api})
+	node.AddItem("ip", ctypes.ConfigValueStr{Value: ip})
+	node.AddItem("cmd", ctypes.ConfigValueStr{Value: cmd})
+	return plugin.ConfigType{ConfigDataNode: node}
+}
