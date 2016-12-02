@@ -1,4 +1,4 @@
-// +build small
+package sessioninfo
 
 /*
 http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -19,88 +19,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package sessioninfo
-
 import (
 	"testing"
-	"time"
 
-	"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
-
+	"github.com/intelsdi-x/snap/control/plugin"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestRandCollector(t *testing.T) {
-	rc := RandCollector{}
-
-	Convey("Test RandCollector", t, func() {
-		Convey("Collect Integer", func() {
-			metrics := []plugin.Metric{
-				plugin.Metric{
-					Namespace: plugin.NewNamespace("random", "integer"),
-					Config:    map[string]interface{}{"testint": int64(34)},
-					Data:      34,
-					Tags:      map[string]string{"hello": "world"},
-					Unit:      "int",
-					Timestamp: time.Now(),
-				},
-			}
-			mts, err := rc.CollectMetrics(metrics)
-			So(mts, ShouldNotBeEmpty)
-			So(err, ShouldBeNil)
-			So(mts[0].Data, ShouldEqual, 34)
-		})
-		Convey("Collect Float", func() {
-			metrics := []plugin.Metric{
-				plugin.Metric{
-					Namespace: plugin.NewNamespace("random", "float"),
-					Config:    map[string]interface{}{"testfloat": 3.345},
-					Data:      3.345,
-					Tags:      map[string]string{"hello": "world"},
-					Unit:      "float",
-					Timestamp: time.Now(),
-				},
-			}
-			mts, err := rc.CollectMetrics(metrics)
-			So(mts, ShouldNotBeEmpty)
-			So(err, ShouldBeNil)
-			So(mts[0].Data, ShouldEqual, 3.345)
-		})
-		Convey("Collect String", func() {
-			metrics := []plugin.Metric{
-				plugin.Metric{
-					Namespace: plugin.NewNamespace("random", "string"),
-					Config:    map[string]interface{}{"teststring": "charm"},
-					Data:      "charm",
-					Tags:      map[string]string{"hello": "world"},
-					Unit:      "string",
-					Timestamp: time.Now(),
-				},
-			}
-			mts, err := rc.CollectMetrics(metrics)
-			So(mts, ShouldNotBeEmpty)
-			So(err, ShouldBeNil)
-			So(mts[0].Data, ShouldEqual, "charm")
-		})
-	})
-
-	Convey("Test GetMetricTypes", t, func() {
-		rc := RandCollector{}
-
-		Convey("Collect String", func() {
-			mt, err := rc.GetMetricTypes(nil)
-			So(err, ShouldBeNil)
-			So(len(mt), ShouldEqual, 3)
-		})
-	})
-
-	Convey("Test GetConfigPolicy", t, func() {
-		rc := RandCollector{}
-		_, err := rc.GetConfigPolicy()
-
-		Convey("No error returned", func() {
-			So(err, ShouldBeNil)
-		})
+func TestSessioninfoPlugin(t *testing.T) {
+	Convey("Meta should return metadata for the plugin", t, func() {
+		meta := Meta()
+		So(meta.Name, ShouldResemble, pluginName )
+		So(meta.Version, ShouldResemble, pluginVersion)
+		So(meta.Type, ShouldResemble, plugin.CollectorPluginType)
 	})
 }
 

@@ -8,9 +8,10 @@ workflow:
     metrics:
       /pan/sessioninfo/num-active: {}
     config:
-      api: ""
-      ip: ""
-      cmd: "&cmd=<show><session><info/></session></show>"
+      /pan/sessioninfo:
+        api: ""
+        ip: ""
+        cmd: "&cmd=<show><session><info/></session></show>"
     process:
       -
         plugin_name: "passthru"

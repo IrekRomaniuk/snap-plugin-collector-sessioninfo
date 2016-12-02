@@ -5,4 +5,5 @@ import:
   - control/plugin
   - control/plugin/cpolicy
   - core
+  - core/ctypes
 - package: github.com/PuerkitoBio/goquery
