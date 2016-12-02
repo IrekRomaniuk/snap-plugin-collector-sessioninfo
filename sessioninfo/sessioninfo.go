@@ -61,9 +61,8 @@ GetMetricTypes() is started. The input will include a slice of all the metric ty
 
 The output is the collected metrics as plugin.Metric and an error.
 */
-func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
-	var err error
-
+func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType) (metrics []plugin.MetricType, err error) {
+	//var err error
 	var (
 		api string
 		ip string
