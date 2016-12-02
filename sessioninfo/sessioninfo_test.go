@@ -29,6 +29,8 @@ import (
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 	"fmt"
+	"bufio"
+	"os"
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
@@ -81,8 +83,14 @@ func TestSessioninfoPlugin(t *testing.T) {
 }
 
 func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
-	cfg := setupCfg("paste api key here","10.34.2.21","&cmd=<show><session><info/></session></show>")
-
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter api key: ")
+	api, _ := reader.ReadString('\n')
+	reader = bufio.NewReader(os.Stdin)
+	fmt.Print("Enter ip address: ")
+	ip, _ := reader.ReadString('\n')
+	cfg := setupCfg(api,ip,"&cmd=<show><session><info/></session></show>")
+	fmt.Println(api)
 	Convey("Sessioninfo collector", t, func() {
 		p := New()
 		mt, err := p.GetMetricTypes(cfg)
