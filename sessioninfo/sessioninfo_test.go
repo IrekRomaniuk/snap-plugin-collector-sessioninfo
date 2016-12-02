@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -39,7 +40,7 @@ func TestSessioninfoPlugin(t *testing.T) {
 			So(collector, ShouldNotBeNil)
 		})
 		Convey("So Sessioninfo collector should be of Sessioninfo type", func() {
-			So(collector, ShouldHaveSameTypeAs, &Ping{})
+			So(collector, ShouldHaveSameTypeAs, &Sessioninfo{})
 		})
 		Convey("collector.GetConfigPolicy() should return a config policy", func() {
 			configPolicy, _ := collector.GetConfigPolicy()
