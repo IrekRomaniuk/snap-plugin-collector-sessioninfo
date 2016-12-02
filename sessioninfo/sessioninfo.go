@@ -93,7 +93,7 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	} else {
 		cmd = cmdConf.(ctypes.ConfigValueStr).Value
 	}
-
+        fmt.Println(ip + cmd + api)
 	htmlData, err := getHTML(ip + cmd + api)
 	if err != nil { return nil, fmt.Errorf("Error collecting metrics: %v", err) }
 
