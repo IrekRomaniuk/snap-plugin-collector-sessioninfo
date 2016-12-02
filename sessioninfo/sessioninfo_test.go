@@ -28,7 +28,6 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
-	"fmt"
 )
 
 const (
@@ -114,7 +113,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 			So(metrics[0].Namespace()[0].Value, ShouldEqual, "pan")
 			So(metrics[0].Namespace()[1].Value, ShouldEqual, "sessioninfo")
 			for _, m := range metrics {
-				fmt.Println(m.Namespace()[2].Value,m.Data())
+				//fmt.Println(m.Namespace()[2].Value,m.Data())
 				So(m.Namespace()[2].Value, ShouldEqual, "num-active")
 				t.Log(m.Namespace()[2].Value, m.Data())
 			}

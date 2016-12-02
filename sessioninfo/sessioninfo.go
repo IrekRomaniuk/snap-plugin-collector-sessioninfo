@@ -96,7 +96,7 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
         //fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	if err != nil { return nil, fmt.Errorf("Error collecting metrics: %v", err) }
-	fmt.Println(htmlData)
+	//fmt.Println(htmlData)
 	for _, mt := range mts {
 		ns := mt.Namespace()
 
@@ -104,7 +104,7 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 		if err != nil {
 			return nil, fmt.Errorf("Error collecting metrics: %v", err)
 		}
-		fmt.Println(val)
+		//fmt.Println(val)
 		metric := plugin.MetricType{
 			Namespace_: ns,
 			Data_:      val,
