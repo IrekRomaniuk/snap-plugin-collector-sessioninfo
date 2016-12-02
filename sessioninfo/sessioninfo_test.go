@@ -28,7 +28,6 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
-	"fmt"
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
@@ -100,7 +99,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 				},
 
 			}
-			fmt.Println(mts[0].Config().Table())
+			//fmt.Println(mts[0].Config().Table())
 			metrics, err := p.CollectMetrics(mts)
 			So(err, ShouldBeNil)
 			So(metrics, ShouldNotBeNil)

@@ -93,8 +93,8 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	} else {
 		cmd = cmdConf.(ctypes.ConfigValueStr).Value
 	}
-        fmt.Println(ip + cmd + api)
-	htmlData, err := getHTML(ip + cmd + api)
+        fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+	htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	if err != nil { return nil, fmt.Errorf("Error collecting metrics: %v", err) }
 
 	for _, mt := range mts {
