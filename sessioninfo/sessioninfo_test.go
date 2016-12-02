@@ -64,10 +64,10 @@ func TestSessioninfoPlugin(t *testing.T) {
 						So(rule.Required, ShouldBeTrue)
 						So(rule.Type, ShouldEqual, "string")
 					case "ip":
-						So(rule.Required, ShouldBeFalse)
+						So(rule.Required, ShouldBeTrue)
 						So(rule.Type, ShouldEqual, "string")
 					case "cmd":
-						So(rule.Required, ShouldBeFalse)
+						So(rule.Required, ShouldBeTrue)
 						So(rule.Type, ShouldEqual, "string")
 					}
 				}
