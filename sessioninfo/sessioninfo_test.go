@@ -24,6 +24,9 @@ import (
 
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
+	"github.com/intelsdi-x/snap/core/cdata"
+	"github.com/intelsdi-x/snap/core/ctypes
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -91,7 +94,7 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 			mts := []plugin.MetricType{
 				plugin.MetricType{
 					Namespace_: core.NewNamespace(
-						"pan", "sessioninfo", "sessioninfo"),
+						"pan", "sessioninfo", "num-active"),
 					Config_: cfg.ConfigDataNode,
 				},
 
