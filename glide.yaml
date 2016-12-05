@@ -1,9 +1,19 @@
-package: github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
+package: github.com/intelsdi-x/snap-plugin-collector-sessioninfo
 import:
+- package: github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
+  subpackages:
+  - sessioninfo
+- package: github.com/PuerkitoBio/goquery
+  version: ^1.0.1
 - package: github.com/intelsdi-x/snap
+  version: ^1.0.0
   subpackages:
   - control/plugin
   - control/plugin/cpolicy
   - core
   - core/ctypes
-- package: github.com/PuerkitoBio/goquery
+testImport:
+- package: github.com/smartystreets/goconvey
+  version: ^1.6.2
+  subpackages:
+  - convey
