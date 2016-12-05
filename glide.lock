@@ -1,5 +1,5 @@
-hash: 7effdf6987c43c774e9defaaef2790d3581ac92f42ffe712a6a5c1ce42dd55b2
-updated: 2016-12-05T13:12:49.992370837+01:00
+hash: c47c971caba9b8a3eaf933ea05470560493e664b7ec5020885eb9c22f6ab77ba
+updated: 2016-12-05T17:01:33.491354153+01:00
 imports:
 - name: github.com/andybalholm/cascadia
   version: 65919c611220063037b1db8eb334acaf17a6d8ea
@@ -18,10 +18,6 @@ imports:
   - pkg/schedule
   - pkg/stringutils
   - scheduler/wmap
-- name: github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
-  version: 54edc28c4d63acc83b5d140d86073b35e7924561
-  subpackages:
-  - sessioninfo
 - name: github.com/PuerkitoBio/goquery
   version: 56a198aba89cdf7a612e6c762eff9d788b9f2dae
 - name: github.com/robfig/cron

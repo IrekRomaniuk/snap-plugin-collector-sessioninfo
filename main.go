@@ -20,10 +20,10 @@ limitations under the License.
 package main
 
 import (
-	"github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/sessioninfo"
-	//"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
-	"github.com/intelsdi-x/snap/control/plugin"
 	"os"
+
+	"github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/sessioninfo"
+	"github.com/intelsdi-x/snap/control/plugin"
 )
 
 /*const (
@@ -33,5 +33,5 @@ import (
 
 func main() {
 	//plugin.StartCollector(sessioninfo.sessioninfoCollector{}, pluginName, pluginVersion)
-	plugin.Start(sessioninfo.Meta(), sessioninfo.New(), os.Args[1],)
+	plugin.Start(sessioninfo.Meta(), sessioninfo.New(), os.Args[1])
 }

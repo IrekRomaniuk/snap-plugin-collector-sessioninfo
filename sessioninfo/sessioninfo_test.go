@@ -33,13 +33,13 @@ import (
 const (
 	//put your api key and ip address here
 	api = ""
-	ip = "10.34.2.21"
+	ip  = "10.34.2.21"
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
 	Convey("Meta should return metadata for the plugin", t, func() {
 		meta := Meta()
-		So(meta.Name, ShouldResemble, pluginName )
+		So(meta.Name, ShouldResemble, pluginName)
 		So(meta.Version, ShouldResemble, pluginVersion)
 		So(meta.Type, ShouldResemble, plugin.CollectorPluginType)
 	})
@@ -86,7 +86,7 @@ func TestSessioninfoPlugin(t *testing.T) {
 }
 
 func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
-	cfg := setupCfg(api,ip,"&cmd=<show><session><info/></session></show>")
+	cfg := setupCfg(api, ip, "&cmd=<show><session><info/></session></show>")
 	//fmt.Println(api, ip)
 	Convey("Sessioninfo collector", t, func() {
 		p := New()
@@ -103,7 +103,6 @@ func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
 						"pan", "sessioninfo", "num-active"),
 					Config_: cfg.ConfigDataNode,
 				},
-
 			}
 			//fmt.Println(mts[0].Config().Table())
 			metrics, err := p.CollectMetrics(mts)

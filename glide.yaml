@@ -1,8 +1,5 @@
-package: github.com/intelsdi-x/snap-plugin-collector-sessioninfo
+package: github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
 import:
-- package: github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
-  subpackages:
-  - sessioninfo
 - package: github.com/PuerkitoBio/goquery
   version: ^1.0.1
 - package: github.com/intelsdi-x/snap

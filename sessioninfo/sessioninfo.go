@@ -20,18 +20,18 @@ limitations under the License.
 package sessioninfo
 
 import (
+	"crypto/tls"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/PuerkitoBio/goquery"
-	//"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
 	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
-	"strings"
-	"net/http"
-	"crypto/tls"
-	"io/ioutil"
-	"time"
 )
 
 const (
@@ -50,7 +50,6 @@ var (
 	}
 )
 
-
 type SessioninfoCollector struct {
 }
 
@@ -58,7 +57,6 @@ func New() *SessioninfoCollector {
 	sessioninfo := &SessioninfoCollector{}
 	return sessioninfo
 }
-
 
 /*  CollectMetrics collects metrics for testing.
 
@@ -71,7 +69,7 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	//var err error
 	var (
 		api string
-		ip string
+		ip  string
 		cmd string
 	)
 	conf := mts[0].Config().Table()
@@ -93,9 +91,11 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	} else {
 		cmd = cmdConf.(ctypes.ConfigValueStr).Value
 	}
-        //fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+	//fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
-	if err != nil { return nil, fmt.Errorf("Error collecting metrics: %v", err) }
+	if err != nil {
+		return nil, fmt.Errorf("Error collecting metrics: %v", err)
+	}
 	//fmt.Println(htmlData)
 	for _, mt := range mts {
 		ns := mt.Namespace()
@@ -115,23 +115,30 @@ func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType)
 	return metrics, nil
 }
 
-func getHTML (url string ) (string, error) {
+func getHTML(url string) (string, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
 	resp, err := client.Get(url)
-	if err != nil { return "", err }
+	if err != nil {
+		return "", err
+	}
 	htmlData, err := ioutil.ReadAll(resp.Body)
-	if err != nil { return "", err }
+	if err != nil {
+		return "", err
+	}
 	resp.Body.Close()
 	return string(htmlData), nil
 }
+
 //HTML parse should go to snap-plugin-processor ?
-func parseSessionInfo (tag string, htmlData string) (string, error) {
+func parseSessionInfo(tag string, htmlData string) (string, error) {
 	htmlCode := strings.NewReader(htmlData)
 	doc, err := goquery.NewDocumentFromReader(htmlCode)
-	if err != nil { return "", err }
+	if err != nil {
+		return "", err
+	}
 	s := doc.Find(tag).Text()
 	return s, nil
 }
@@ -155,7 +162,6 @@ func (sessioninfo *SessioninfoCollector) GetMetricTypes(cfg plugin.ConfigType) (
 	return mts, nil
 }
 
-
 // GetConfigPolicy returns plugin configuration
 func (sessioninfo *SessioninfoCollector) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	c := cpolicy.New()
@@ -176,7 +182,7 @@ func Meta() *plugin.PluginMeta {
 		pluginName,
 		pluginVersion,
 		pluginType,
-		[]string{plugin.SnapGOBContentType},//[]string{},
+		[]string{plugin.SnapGOBContentType}, //[]string{},
 		[]string{plugin.SnapGOBContentType},
 		plugin.Unsecure(true),
 		plugin.ConcurrencyCount(1),
