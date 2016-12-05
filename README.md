@@ -1,5 +1,5 @@
-# snap collector plugin - session info
-This plugin collects Paloalto firewalls session info  
+# snap collector plugin - sessioninfo
+Collects Paloalto firewall session info  
 
 It's used in the [snap framework](http://github.com:intelsdi-x/snap).
 
