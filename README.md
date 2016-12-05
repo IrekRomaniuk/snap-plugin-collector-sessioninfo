@@ -35,12 +35,17 @@ $ go get -u github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
 
 ### Collected Metrics
 
-List of collected metrics is described in [METRICS.md](https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/blob/master/METRICS.md).
+This plugin has the ability to gather the following metric:
+
+Namespace | Description
+----------|-----------------------
+/pan/sessioninfo/num-active | session count.
+
 
 ### Example
-Example running ping collector and writing data to a database.
+Example running sessioninfo collector and writing data to an Influx database.
 
-Load ping plugin
+Load sessioninfo plugin
 ```
 $ snaptel plugin load snap-plugin-collector-sessioninfo
 ```
@@ -71,24 +76,20 @@ workflow:
         api: ""
         ip: ""
         cmd: "&cmd=<show><session><info/></session></show>"
-    process:
+    publish:
       -
-        plugin_name: "passthru"
-        process: null
-        publish:
-          -
-            plugin_name: "influxdb"
-            config:
-              host: "localhost"
-              port: 8086
-              database: "test"
-              retention: "default"
-              user: "admin"
-              password: "admin"
-              https: false
-              skip-verify: false
+        plugin_name: "influxdb"
+        config:
+          host: "localhost"
+          port: 8086
+          database: "test"
+          retention: "default"
+          user: "admin"
+          password: "admin"
+          https: false
+          skip-verify: false
 ```
-Load file plugin for publishing:
+Load influxdb plugin for publishing:
 ```
 $ snaptel plugin load snap-plugin-publisher-influxdb
 ```

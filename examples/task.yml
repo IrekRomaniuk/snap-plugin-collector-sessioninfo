@@ -12,19 +12,15 @@ workflow:
         api: ""
         ip: ""
         cmd: "&cmd=<show><session><info/></session></show>"
-    process:
+    publish:
       -
-        plugin_name: "passthru"
-        process: null
-        publish:
-          -
-            plugin_name: "influxdb"
-            config:
-              host: "localhost"
-              port: 8086
-              database: "test"
-              retention: "default"
-              user: "admin"
-              password: "admin"
-              https: false
-              skip-verify: false
+        plugin_name: "influxdb"
+        config:
+          host: "localhost"
+          port: 8086
+          database: "test"
+          retention: "default"
+          user: "admin"
+          password: "admin"
+          https: false
+          skip-verify: false
