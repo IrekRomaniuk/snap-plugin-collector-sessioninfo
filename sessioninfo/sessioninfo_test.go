@@ -85,7 +85,7 @@ func TestSessioninfoPlugin(t *testing.T) {
 	})
 }
 
-func TestSessioninfoCollector_CollectMetricsollectMetrics(t *testing.T) {
+func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
 	cfg := setupCfg(api, ip, "&cmd=<show><session><info/></session></show>")
 	//fmt.Println(api, ip)
 	Convey("Sessioninfo collector", t, func() {
