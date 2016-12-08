@@ -1,7 +1,7 @@
 # snap collector plugin - sessioninfo
 Collects Paloalto firewall session info  
 
-It's used in the [snap framework](http://github.com:intelsdi-x/snap).
+It's used in the [Snap framework](http://github.com:intelsdi-x/snap).
 
 1. [Getting Started](#getting-started)
   * [System Requirements](#system-requirements)
@@ -19,7 +19,7 @@ It's used in the [snap framework](http://github.com:intelsdi-x/snap).
 * [golang 1.5+](https://golang.org/dl/)  - needed only for building
 
 ### Operating systems
-All OSs currently supported by snap:
+Builds for: 
 * Linux/amd64
 
 ### Installation
@@ -28,7 +28,7 @@ All OSs currently supported by snap:
 $ go get -u github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo
 ```
 ### Configuration and Usage
-* Set up the [snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started).
+* Set up the [Snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started).
 * Load the plugin and create a task, see example in [Examples](https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/tree/master/examples).
 
 ## Documentation
@@ -78,7 +78,7 @@ workflow:
         cmd: "&cmd=<show><session><info/></session></show>"
     publish:
       -
-        plugin_name: "influxdb"
+        plugin_name: "sessioninfo"
         config:
           host: "localhost"
           port: 8086
@@ -89,9 +89,9 @@ workflow:
           https: false
           skip-verify: false
 ```
-Load InfluxDB plugin for publishing:
+Load sessioninfo plugin for publishing:
 ```
-$ snaptel plugin load snap-plugin-publisher-influxdb
+$ snaptel plugin load snap-plugin-publisher-sessioninfo
 ```
 
 Create a task:
@@ -118,7 +118,7 @@ NAMESPACE                        DATA            TIMESTAMP
 /pan/sessioninfo/num-active      105291          2016-12-02 15:26:46.915443395 -0500 EST
 ```
 Watch metrics in real-time using [snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/) 
-and use InfluxDB plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to InfluxDB")
+and use sessioninfo plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to sessioninfo")
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
