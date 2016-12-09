@@ -47,7 +47,7 @@ Example running sessioninfo collector and writing data to an Influx database.
 
 Load sessioninfo plugin
 ```
-$ snaptel plugin load snap-plugin-collector-sessioninfo
+$ snaptel plugin load $GOPATH/bin/snap-plugin-collector-sessioninfo
 ```
 List available plugins
 ```
