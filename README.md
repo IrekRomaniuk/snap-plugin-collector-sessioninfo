@@ -1,3 +1,4 @@
+![Alt text](https://img.shields.io/badge/version-production-green.svg)
 # snap collector plugin - sessioninfo
 Collects Paloalto firewall session info  
 
