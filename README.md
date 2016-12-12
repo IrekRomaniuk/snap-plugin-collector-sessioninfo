@@ -1,6 +1,6 @@
 ![Alt text](https://img.shields.io/badge/version-production-green.svg)
 # snap collector plugin - sessioninfo
-Collects Paloalto firewall session info  
+Collects Paloalto firewall session info. Model PA-5060 with Software Version 7.1.2 was used in testing  
 
 It's used in the [Snap framework](http://github.com:intelsdi-x/snap).
 
@@ -63,7 +63,7 @@ $ snaptel metric list
 ```
 
 Create a task manifest file and put firewall 'api' key and 'ip' address  (example files in [examples] (https://github.com/IrekRomaniuk/snap-plugin-collector-sessioninfo/blob/master/examples/task.yml)). 
-Do not change 'cmd' in task manifest.
+Do not change 'cmd' in task manifest. 
 ```yaml
 version: 1
 schedule:

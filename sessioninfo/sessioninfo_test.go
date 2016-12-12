@@ -25,6 +25,7 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
+	"net/http"
 )
 
 const (
@@ -80,6 +81,15 @@ func TestSessioninfoPlugin(t *testing.T) {
 			})
 		})
 	})
+}
+
+func TestAPI(t *testing.T) {
+	http.HandleFunc("/goats-hello", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(sessioninfo_response))
+	})
+	//log.Fatal(http.ListenAndServe(":8080", nil))
+
 }
 
 func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
