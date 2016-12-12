@@ -134,6 +134,7 @@ Initial release
 ### TODO
 
 * add more metrics, i.e. pps, num-udp, num-icmp, num-tcp
+* mock sessioninfo_response in test
 
 ## Acknowledgements
 * Author: [@IrekRomaniuk](https://github.com/IrekRomaniuk/)
