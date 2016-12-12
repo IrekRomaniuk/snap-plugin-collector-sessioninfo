@@ -124,3 +124,46 @@ func setupCfg(api string, ip string, cmd string) plugin.ConfigType {
 	node.AddItem("cmd", ctypes.ConfigValueStr{Value: cmd})
 	return plugin.ConfigType{ConfigDataNode: node}
 }
+
+const sessioninfo_response = `<response status="success"><result>
+<tmo-udp>30</tmo-udp>
+<tcp-nonsyn-rej>False</tcp-nonsyn-rej>
+<tmo-tcp>3600</tmo-tcp>
+<pps>1124</pps>
+<num-max>4194302</num-max>
+<age-scan-thresh>80</age-scan-thresh>
+<tmo-tcphalfclosed>120</tmo-tcphalfclosed>
+<num-active>102448</num-active>
+<dis-def>60</dis-def>
+<num-mcast>0</num-mcast>
+<icmp-unreachable-rate>200</icmp-unreachable-rate>
+<tmo-tcptimewait>15</tmo-tcptimewait>
+<age-scan-ssf>8</age-scan-ssf>
+<vardata-rate>10485760</vardata-rate>
+<age-scan-tmo>10</age-scan-tmo>
+<tmo-tcpinit>5</tmo-tcpinit>
+<dp>*.dp0</dp>
+<dis-tcp>90</dis-tcp>
+<num-udp>29570</num-udp>
+<tmo-icmp>6</tmo-icmp>
+<max-pending-mcast>0</max-pending-mcast>
+<age-accel-thresh>80</age-accel-thresh>
+<tmo-tcphandshake>10</tmo-tcphandshake>
+<oor-action>drop</oor-action>
+<tmo-def>30</tmo-def>
+<age-accel-en>True</age-accel-en>
+<age-accel-tsf>2</age-accel-tsf>
+<hw-offload>True</hw-offload>
+<num-icmp>114</num-icmp>
+<num-predict>0</num-predict>
+<tmo-cp>30</tmo-cp>
+<strict-checksum>True</strict-checksum>
+<tmo-tcp-unverif-rst>30</tmo-tcp-unverif-rst>
+<num-bcast>0</num-bcast>
+<ipv6-fw>True</ipv6-fw>
+<num-installed>4142667796</num-installed>
+<num-tcp>72139</num-tcp>
+<dis-udp>60</dis-udp>
+<cps>750</cps>
+<kbps>1519</kbps>
+</result></response>`
