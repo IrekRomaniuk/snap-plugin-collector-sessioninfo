@@ -13,7 +13,8 @@ It's used in the [Snap framework](http://github.com:intelsdi-x/snap).
   * [Collected Metrics](#collected-metrics)
   * [Examples](#examples)
 3. [License](#license-and-authors)
-4. [Acknowledgements](#acknowledgements)
+4. [Releases](#Releases)
+5. [Acknowledgements](#acknowledgements)
 
 ## Getting Started
 ### System Requirements
@@ -124,6 +125,15 @@ and use sessioninfo plugin for publishing ![Alt text](examples/grafana-sessionin
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
+
+## Releases
+### Version 1
+
+Initial release
+
+### TODO
+
+* add more metrics, i.e. pps, num-udp, num-icmp, num-tcp
 
 ## Acknowledgements
 * Author: [@IrekRomaniuk](https://github.com/IrekRomaniuk/)
