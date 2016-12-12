@@ -121,7 +121,7 @@ NAMESPACE                        DATA            TIMESTAMP
 /pan/sessioninfo/num-active      105291          2016-12-02 15:26:46.915443395 -0500 EST
 ```
 Watch metrics in real-time using [snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/) 
-and use sessioninfo plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to sessioninfo")
+and use InfluxDB plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to InfluxDB")
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
