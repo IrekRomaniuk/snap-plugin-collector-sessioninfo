@@ -26,7 +26,7 @@ import (
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/assert"
+	//"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -108,6 +108,33 @@ func TestAPI(t *testing.T) {
     response, _ := newHTML(html, "url")
     assert.Equal(t, sessioninfo_response, response)
 
+}
+//parseSessionInfo(tag string, htmlData string) (string, error)
+func TestParseSessionInfo (t *testing.T) {
+	Convey("Parse SessionInfo", t, func() {
+		var parse string
+		parse, _ = parseSessionInfo("num-active", sessioninfo_response)
+		So(parse, ShouldEqual, "102448")
+		parse, _ = parseSessionInfo("pps", sessioninfo_response)
+		So(parse, ShouldEqual, "1124")
+		parse, _ = parseSessionInfo("cps", sessioninfo_response)
+		So(parse, ShouldEqual, "750")
+		parse, _ = parseSessionInfo("kbps", sessioninfo_response)
+		So(parse, ShouldEqual, "1519")
+		parse, _ = parseSessionInfo("num-tcp", sessioninfo_response)
+		So(parse, ShouldEqual, "72139")
+		parse, _ = parseSessionInfo("dis-tcp", sessioninfo_response)
+		So(parse, ShouldEqual, "90")
+		parse, _ = parseSessionInfo("num-udp", sessioninfo_response)
+		So(parse, ShouldEqual, "29570")
+		parse, _ = parseSessionInfo("dis-udp", sessioninfo_response)
+		So(parse, ShouldEqual, "60")
+		parse, _ = parseSessionInfo("num-icmp", sessioninfo_response)
+		So(parse, ShouldEqual, "114")
+		parse, _ = parseSessionInfo("icmp-unreachable-rate", sessioninfo_response)
+		So(parse, ShouldEqual, "200")
+
+	})
 }
 
 func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
