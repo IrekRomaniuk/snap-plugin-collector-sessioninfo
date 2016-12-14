@@ -25,7 +25,8 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
-	"net/http"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -33,6 +34,14 @@ const (
 	api = ""
 	ip  = "10.34.2.21"
 )
+
+type getHTMLMock struct {
+	mock.Mock
+}
+
+type HTML interface {
+	getHTML(url string) (string, error)
+}
 
 func TestSessioninfoPlugin(t *testing.T) {
 	Convey("Meta should return metadata for the plugin", t, func() {
@@ -83,12 +92,21 @@ func TestSessioninfoPlugin(t *testing.T) {
 	})
 }
 
+func newHTML(h HTML, url string) (string, error) {
+	return h.getHTML(url)
+}
+
+//func getHTML(url string) (string, error)
+func (m getHTMLMock) getHTML(url string) (string, error) {
+	args := m.Called()
+	return args.String(0),args.Error(1)
+}
+
 func TestAPI(t *testing.T) {
-	http.HandleFunc("/goats-hello", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(sessioninfo_response))
-	})
-	//log.Fatal(http.ListenAndServe(":8080", nil))
+    html := new(getHTMLMock)
+    html.On("getHMTL", "url").Return(sessioninfo_response, nil)
+    response, _ := newHTML(html, "url")
+    assert.Equal(t, sessioninfo_response, response)
 
 }
 
