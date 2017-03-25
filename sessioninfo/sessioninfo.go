@@ -47,12 +47,48 @@ var (
 	}
 )
 
+type Session struct {
+	tmo_udp string `xml:"tmo_udp"`
+	tmo_tcp string `xml:"tmo-tcp"`
+ 	pps string `xml:"pps"`
+	num_max string `xml:"num-max"`
+	age_scan_thresh string `xml:"age-scan-thresh"`
+	tmo_tcphalfclosed string `xml:"tmo-tcphalfclosed"`
+	num_active string `xml:"num-active"`
+	dis_def string `xml:"dis-def"`
+	num_mcast string `xml:"num-mcast"`
+	icmp_unreachable_rate string `xml:"icmp-unreachable-rate"`
+	tmo_tcptimewait string `xml:"tmo-tcptimewait"`
+	age_scan_ssf string `xml:"age-scan-ssf"`
+	vardata_rate string `xml:"vardata-rate"`
+	age_scan_tmo string `xml:"age-scan-tmo"`
+	tmo_tcpinit string `xml:"tmo-tcpinit"`
+	dis_tcp string `xml:"dis-tcp"`
+	num_udp string `xml:"num-udp"`
+	tmo_icmp string `xml:"tmo-icmp"`
+	max_pending_mcast string `xml:"max-pending-mcast"`
+	age_accel_thresh string `xml:"age-accel-thresh"`
+	tmo_tcphandshake string `xml:"tmo-tcphandshake"`
+	tmo_def string `xml:"tmo-def"`
+	age_accel_tsf string `xml:"age-accel-tsf"`
+	num_icmp string `xml:"num-icmp"`
+	num_predict string `xml:"num-predict"`
+	tmo__cp string `xml:"tmo-cp"`
+	tmo_tcp_unverif_rst string `xml:"tmo-tcp-unverif-rst"`
+	num_bcast string`xml:"num-bcast"`
+	num_installed string `xml:"num-installed"`
+	num_tcp string `xml:"num-tcp"`
+	dis_udp string `xml:"dis-udp"`
+	cps string `xml:"cps"`
+	kbps string `xml:"kbps"`
+}
+
 type SessioninfoCollector struct {
 }
 
 func New() *SessioninfoCollector {
-	sessioninfo := &SessioninfoCollector{}
-	return sessioninfo
+sessioninfo := &SessioninfoCollector{}
+return sessioninfo
 }
 
 /*  CollectMetrics collects metrics for testing.
@@ -63,125 +99,125 @@ GetMetricTypes() is started. The input will include a slice of all the metric ty
 The output is the collected metrics as plugin.Metric and an error.
 */
 func (sessioninfo *SessioninfoCollector) CollectMetrics(mts []plugin.MetricType) (metrics []plugin.MetricType, err error) {
-	//var err error
-	var (
-		api string
-		ip  string
-		cmd string
-	)
-	conf := mts[0].Config().Table()
-	apiConf, ok := conf["api"]
-	if !ok || apiConf.(ctypes.ConfigValueStr).Value == "" {
-		return nil, fmt.Errorf("api key missing from config, %v", conf)
-	} else {
-		api = apiConf.(ctypes.ConfigValueStr).Value
-	}
-	ipConf, ok := conf["ip"]
-	if !ok || ipConf.(ctypes.ConfigValueStr).Value == "" {
-		return nil, fmt.Errorf("ip address missing from config, %v", conf)
-	} else {
-		ip = ipConf.(ctypes.ConfigValueStr).Value
-	}
-	cmdConf, ok := conf["cmd"]
-	if !ok || cmdConf.(ctypes.ConfigValueStr).Value == "" {
-		return nil, fmt.Errorf("cmd missing from config, %v", conf)
-	} else {
-		cmd = cmdConf.(ctypes.ConfigValueStr).Value
-	}
-	//fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
-	htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+//var err error
+var (
+	api string
+	ip  string
+	cmd string
+)
+conf := mts[0].Config().Table()
+apiConf, ok := conf["api"]
+if !ok || apiConf.(ctypes.ConfigValueStr).Value == "" {
+	return nil, fmt.Errorf("api key missing from config, %v", conf)
+} else {
+	api = apiConf.(ctypes.ConfigValueStr).Value
+}
+ipConf, ok := conf["ip"]
+if !ok || ipConf.(ctypes.ConfigValueStr).Value == "" {
+	return nil, fmt.Errorf("ip address missing from config, %v", conf)
+} else {
+	ip = ipConf.(ctypes.ConfigValueStr).Value
+}
+cmdConf, ok := conf["cmd"]
+if !ok || cmdConf.(ctypes.ConfigValueStr).Value == "" {
+	return nil, fmt.Errorf("cmd missing from config, %v", conf)
+} else {
+	cmd = cmdConf.(ctypes.ConfigValueStr).Value
+}
+//fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+if err != nil {
+	return nil, fmt.Errorf("Error collecting metrics: %v", err)
+}
+//fmt.Println(htmlData)
+for _, mt := range mts {
+	ns := mt.Namespace()
+
+	val, err := parseSessionInfo("num-active", htmlData)
 	if err != nil {
 		return nil, fmt.Errorf("Error collecting metrics: %v", err)
 	}
-	//fmt.Println(htmlData)
-	for _, mt := range mts {
-		ns := mt.Namespace()
-
-		val, err := parseSessionInfo("num-active", htmlData)
-		if err != nil {
-			return nil, fmt.Errorf("Error collecting metrics: %v", err)
-		}
-		//fmt.Println(val)
-		metric := plugin.MetricType{
-			Namespace_: ns,
-			Data_:      val,
-			Timestamp_: time.Now(),
-		}
-		metrics = append(metrics, metric)
+	//fmt.Println(val)
+	metric := plugin.MetricType{
+		Namespace_: ns,
+		Data_:      val,
+		Timestamp_: time.Now(),
 	}
-	return metrics, nil
+	metrics = append(metrics, metric)
+}
+return metrics, nil
 }
 
 func getHTML(url string) (string, error) {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	client := &http.Client{Transport: tr}
-	resp, err := client.Get(url)
-	if err != nil {
-		return "", err
-	}
-	htmlData, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	resp.Body.Close()
-	return string(htmlData), nil
+tr := &http.Transport{
+	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+}
+client := &http.Client{Transport: tr}
+resp, err := client.Get(url)
+if err != nil {
+	return "", err
+}
+htmlData, err := ioutil.ReadAll(resp.Body)
+if err != nil {
+	return "", err
+}
+resp.Body.Close()
+return string(htmlData), nil
 }
 
 //HTML parse should go to snap-plugin-processor ?
 func parseSessionInfo(tag string, htmlData string) (string, error) {
-	htmlCode := strings.NewReader(htmlData)
-	doc, err := goquery.NewDocumentFromReader(htmlCode)
-	if err != nil {
-		return "", err
-	}
-	s := doc.Find(tag).Text()
-	return s, nil
+htmlCode := strings.NewReader(htmlData)
+doc, err := goquery.NewDocumentFromReader(htmlCode)
+if err != nil {
+	return "", err
+}
+s := doc.Find(tag).Text()
+return s, nil
 }
 
 /*
-	GetMetricTypes returns metric types for testing.
-	GetMetricTypes() will be called when your plugin is loaded in order to populate the metric catalog(where snaps stores all
-	available metrics).
+GetMetricTypes returns metric types for testing.
+GetMetricTypes() will be called when your plugin is loaded in order to populate the metric catalog(where snaps stores all
+available metrics).
 
-	Config info is passed in. This config information would come from global config snap settings.
+Config info is passed in. This config information would come from global config snap settings.
 
-	The metrics returned will be advertised to users who list all the metrics and will become targetable by tasks.
+The metrics returned will be advertised to users who list all the metrics and will become targetable by tasks.
 */
 func (sessioninfo *SessioninfoCollector) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, error) {
-	mts := []plugin.MetricType{}
-	for _, metricName := range metricNames {
-		mts = append(mts, plugin.MetricType{
-			Namespace_: core.NewNamespace("pan", "sessioninfo", metricName),
-		})
-	}
-	return mts, nil
+mts := []plugin.MetricType{}
+for _, metricName := range metricNames {
+	mts = append(mts, plugin.MetricType{
+		Namespace_: core.NewNamespace("pan", "sessioninfo", metricName),
+	})
+}
+return mts, nil
 }
 
 // GetConfigPolicy returns plugin configuration
 func (sessioninfo *SessioninfoCollector) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
-	c := cpolicy.New()
-	rule0, _ := cpolicy.NewStringRule("api", true)
-	rule1, _ := cpolicy.NewStringRule("ip", true)
-	rule2, _ := cpolicy.NewStringRule("cmd", true)
-	cp := cpolicy.NewPolicyNode()
-	cp.Add(rule0)
-	cp.Add(rule1)
-	cp.Add(rule2)
-	c.Add([]string{"pan", "sessioninfo"}, cp)
-	return c, nil
+c := cpolicy.New()
+rule0, _ := cpolicy.NewStringRule("api", true)
+rule1, _ := cpolicy.NewStringRule("ip", true)
+rule2, _ := cpolicy.NewStringRule("cmd", true)
+cp := cpolicy.NewPolicyNode()
+cp.Add(rule0)
+cp.Add(rule1)
+cp.Add(rule2)
+c.Add([]string{"pan", "sessioninfo"}, cp)
+return c, nil
 }
 
 //Meta returns meta data for testing
 func Meta() *plugin.PluginMeta {
-	return plugin.NewPluginMeta(
-		pluginName,
-		pluginVersion,
-		pluginType,
-		[]string{plugin.SnapGOBContentType}, //[]string{},
-		[]string{plugin.SnapGOBContentType},
-		plugin.Unsecure(true),
-		plugin.ConcurrencyCount(1),
-	)
+return plugin.NewPluginMeta(
+	pluginName,
+	pluginVersion,
+	pluginType,
+	[]string{plugin.SnapGOBContentType}, //[]string{},
+	[]string{plugin.SnapGOBContentType},
+	plugin.Unsecure(true),
+	plugin.ConcurrencyCount(1),
+)
 }
