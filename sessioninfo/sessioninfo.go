@@ -21,14 +21,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
+	//"github.com/PuerkitoBio/goquery"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
 	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
+	"encoding/xml"
 )
 
 const (
@@ -48,39 +48,44 @@ var (
 )
 
 type Session struct {
-	tmo_udp string `xml:"tmo_udp"`
-	tmo_tcp string `xml:"tmo-tcp"`
- 	pps string `xml:"pps"`
-	num_max string `xml:"num-max"`
-	age_scan_thresh string `xml:"age-scan-thresh"`
-	tmo_tcphalfclosed string `xml:"tmo-tcphalfclosed"`
-	num_active string `xml:"num-active"`
-	dis_def string `xml:"dis-def"`
-	num_mcast string `xml:"num-mcast"`
-	icmp_unreachable_rate string `xml:"icmp-unreachable-rate"`
-	tmo_tcptimewait string `xml:"tmo-tcptimewait"`
-	age_scan_ssf string `xml:"age-scan-ssf"`
-	vardata_rate string `xml:"vardata-rate"`
-	age_scan_tmo string `xml:"age-scan-tmo"`
-	tmo_tcpinit string `xml:"tmo-tcpinit"`
-	dis_tcp string `xml:"dis-tcp"`
-	num_udp string `xml:"num-udp"`
-	tmo_icmp string `xml:"tmo-icmp"`
-	max_pending_mcast string `xml:"max-pending-mcast"`
+	XMLName xml.Name `xml:"response"`
+	Status  string `xml:"status,attr""`
+	Result  Result `xml:"result"`
+}
+type Result struct {
+	Tmo_udp string `xml:"tmo-udp"`
+	Tmo_tcp string `xml:"tmo-tcp"`
+ 	Pps string `xml:"pps"`
+	Num_max string `xml:"num-max"`
+	Age_scan_thresh string `xml:"age-scan-thresh"`
+	Tmo_tcphalfclosed string `xml:"tmo-tcphalfclosed"`
+	Num_active string `xml:"num-active"`
+	Dis_def string `xml:"dis-def"`
+	Num_mcast string `xml:"num-mcast"`
+	Icmp_unreachable_rate string `xml:"icmp-unreachable-rate"`
+	Tmo_tcptimewait string `xml:"tmo-tcptimewait"`
+	Age_scan_ssf string `xml:"age-scan-ssf"`
+	Vardata_rate string `xml:"vardata-rate"`
+	Age_scan_tmo string `xml:"age-scan-tmo"`
+	Tmo_tcpinit string `xml:"tmo-tcpinit"`
+	Dis_tcp string `xml:"dis-tcp"`
+	Num_udp string `xml:"num-udp"`
+	Tmo_icmp string `xml:"tmo-icmp"`
+	Max_pending_mcast string `xml:"max-pending-mcast"`
 	age_accel_thresh string `xml:"age-accel-thresh"`
-	tmo_tcphandshake string `xml:"tmo-tcphandshake"`
-	tmo_def string `xml:"tmo-def"`
-	age_accel_tsf string `xml:"age-accel-tsf"`
-	num_icmp string `xml:"num-icmp"`
-	num_predict string `xml:"num-predict"`
-	tmo__cp string `xml:"tmo-cp"`
-	tmo_tcp_unverif_rst string `xml:"tmo-tcp-unverif-rst"`
-	num_bcast string`xml:"num-bcast"`
-	num_installed string `xml:"num-installed"`
-	num_tcp string `xml:"num-tcp"`
-	dis_udp string `xml:"dis-udp"`
-	cps string `xml:"cps"`
-	kbps string `xml:"kbps"`
+	Tmo_tcphandshake string `xml:"tmo-tcphandshake"`
+	Tmo_def string `xml:"tmo-def"`
+	Age_accel_tsf string `xml:"age-accel-tsf"`
+	Num_icmp string `xml:"num-icmp"`
+	Num_predict string `xml:"num-predict"`
+	Tmo__cp string `xml:"tmo-cp"`
+	Tmo_tcp_unverif_rst string `xml:"tmo-tcp-unverif-rst"`
+	Num_bcast string`xml:"num-bcast"`
+	Num_installed string `xml:"num-installed"`
+	Num_tcp string `xml:"num-tcp"`
+	Dis_udp string `xml:"dis-udp"`
+	Cps string `xml:"cps"`
+	Kbps string `xml:"kbps"`
 }
 
 type SessioninfoCollector struct {
@@ -133,7 +138,8 @@ if err != nil {
 for _, mt := range mts {
 	ns := mt.Namespace()
 
-	val, err := parseSessionInfo("num-active", htmlData)
+	//val, err := parseSessionInfo("num-active", string(htmlData))
+	val := len(htmlData) //tmp until marshalling finished
 	if err != nil {
 		return nil, fmt.Errorf("Error collecting metrics: %v", err)
 	}
@@ -148,25 +154,25 @@ for _, mt := range mts {
 return metrics, nil
 }
 
-func getHTML(url string) (string, error) {
+func getHTML(url string) ([]byte, error) {
 tr := &http.Transport{
 	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 }
 client := &http.Client{Transport: tr}
 resp, err := client.Get(url)
 if err != nil {
-	return "", err
+	return []byte{}, err
 }
 htmlData, err := ioutil.ReadAll(resp.Body)
 if err != nil {
-	return "", err
+	return []byte{}, err
 }
 resp.Body.Close()
-return string(htmlData), nil
+return htmlData, nil
 }
 
 //HTML parse should go to snap-plugin-processor ?
-func parseSessionInfo(tag string, htmlData string) (string, error) {
+/*func parseSessionInfo(tag string, htmlData string) (string, error) {
 htmlCode := strings.NewReader(htmlData)
 doc, err := goquery.NewDocumentFromReader(htmlCode)
 if err != nil {
@@ -174,7 +180,7 @@ if err != nil {
 }
 s := doc.Find(tag).Text()
 return s, nil
-}
+}*/
 
 /*
 GetMetricTypes returns metric types for testing.

@@ -25,6 +25,8 @@ import (
 	"github.com/intelsdi-x/snap/core/cdata"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
+	"encoding/xml"
+	"fmt"
 )
 
 const (
@@ -80,6 +82,14 @@ func TestSessioninfoPlugin(t *testing.T) {
 			})
 		})
 	})
+}
+
+func TestSessioninfo(t *testing.T) {
+	cmd := "&cmd=<show><session><info/></session></show>"
+	htmlData, _ := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+	var session Session
+	xml.Unmarshal(htmlData, &session)
+	fmt.Println(session.Result.Kbps)
 }
 
 func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
