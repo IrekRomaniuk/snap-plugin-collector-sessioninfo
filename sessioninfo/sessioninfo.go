@@ -43,7 +43,11 @@ const (
 }*/
 var (
 	metricNames = []string{
-		"num-active",
+		"Tmo_udp,","Tmo_tcp","Pps","Num_max","Age_scan_thresh","Tmo_tcphalfclosed","Num_active","Dis_def",
+		"Num_mcast","Icmp_unreachable_rate","Tmo_tcptimewait", "Age_scan_ssf","Vardata_rate","Age_scan_tmo",
+		"Tmo_tcpinit","Dis_tcp","Num_udp","Tmo_icmp","Max_pending_mcast","age_accel_thresh","Tmo_tcphandshake",
+		"Tmo_def","Age_accel_tsf","Num_icmp","Num_predict","Tmo__cp","Tmo_tcp_unverif_rst","Num_bcast",
+		"Num_installed", "Num_tcp","Dis_udp","Cps","Kbps",
 	}
 )
 
@@ -109,6 +113,7 @@ var (
 	api string
 	ip  string
 	cmd string
+	session Session
 )
 conf := mts[0].Config().Table()
 apiConf, ok := conf["api"]
@@ -135,6 +140,7 @@ if err != nil {
 	return nil, fmt.Errorf("Error collecting metrics: %v", err)
 }
 //fmt.Println(htmlData)
+xml.Unmarshal(htmlData, &session)
 for _, mt := range mts {
 	ns := mt.Namespace()
 
