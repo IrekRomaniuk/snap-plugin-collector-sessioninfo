@@ -140,10 +140,6 @@ if !ok || cmdConf.(ctypes.ConfigValueStr).Value == "" {
 } else {
 	cmd = cmdConf.(ctypes.ConfigValueStr).Value
 }
-//fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
-type HttpResponseFetcher interface {
-	Fetch(url string) ([]byte, error)
-}
 
 d := NewDownloader(get_page)
 htmlData, err := d.download("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
