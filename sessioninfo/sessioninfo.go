@@ -156,7 +156,7 @@ for _, mt := range mts {
 	ns := mt.Namespace()
 
 	//val, err := parseSessionInfo("num-active", string(htmlData))
-	val := len(htmlData) //tmp until marshalling finished
+	val := session.Result.Num_active //tmp until marshalling finished
 	if err != nil {
 		return nil, fmt.Errorf("Error collecting metrics: %v", err)
 	}
