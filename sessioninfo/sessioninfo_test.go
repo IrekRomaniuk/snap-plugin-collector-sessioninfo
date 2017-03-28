@@ -26,7 +26,6 @@ import (
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 	"encoding/xml"
-	"fmt"
 )
 
 const (
@@ -83,13 +82,22 @@ func TestSessioninfoPlugin(t *testing.T) {
 		})
 	})
 }
+// mock your 'get_page()' function here
+func mock_get_page(url string) ([]byte, error){
+	return []byte(sessioninfo_response), nil
+}
 
-func TestSessioninfo(t *testing.T) {
+func TestSessioninfoFetch(t *testing.T) {
 	cmd := "&cmd=<show><session><info/></session></show>"
-	htmlData, _ := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+	d := NewDownloader(mock_get_page)
+	//d := NewDownloader(get_page)
+	htmlData, _ := d.download("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	var session Session
 	xml.Unmarshal(htmlData, &session)
-	fmt.Println(session.Result.Kbps)
+	//fmt.Println(session.Result.Kbps)
+	Convey("Sessioninfo download Kbps", t, func() {
+		So(session.Result.Kbps, ShouldEqual, 1519)
+	})
 }
 
 func TestSessioninfoCollector_CollectMetrics(t *testing.T) {

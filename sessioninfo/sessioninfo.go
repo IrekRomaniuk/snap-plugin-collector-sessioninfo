@@ -50,7 +50,13 @@ var (
 		"Num_installed", "Num_tcp","Dis_udp","Cps","Kbps",
 	}
 )
-
+type PageGetter func(url string) ([]byte, error)
+type Downloader struct {
+	get_page PageGetter
+}
+func NewDownloader(pg PageGetter) *Downloader {
+	return &Downloader{get_page: pg}
+}
 type Session struct {
 	XMLName xml.Name `xml:"response"`
 	Status  string `xml:"status,attr""`
@@ -135,7 +141,12 @@ if !ok || cmdConf.(ctypes.ConfigValueStr).Value == "" {
 	cmd = cmdConf.(ctypes.ConfigValueStr).Value
 }
 //fmt.Println("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
-htmlData, err := getHTML("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
+type HttpResponseFetcher interface {
+	Fetch(url string) ([]byte, error)
+}
+
+d := NewDownloader(get_page)
+htmlData, err := d.download("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 if err != nil {
 	return nil, fmt.Errorf("Error collecting metrics: %v", err)
 }
@@ -160,21 +171,29 @@ for _, mt := range mts {
 return metrics, nil
 }
 
-func getHTML(url string) ([]byte, error) {
-tr := &http.Transport{
-	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+func get_page(url string) ([]byte, error) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+	resp, err := client.Get(url)
+	if err != nil {
+		return []byte{}, err
+	}
+	htmlData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+	resp.Body.Close()
+	return htmlData, nil
 }
-client := &http.Client{Transport: tr}
-resp, err := client.Get(url)
-if err != nil {
-	return []byte{}, err
-}
-htmlData, err := ioutil.ReadAll(resp.Body)
-if err != nil {
-	return []byte{}, err
-}
-resp.Body.Close()
-return htmlData, nil
+//fetching url and return content
+func (d *Downloader) download(url string) ([]byte,error) {
+	content, err := d.get_page(url)
+	if err != nil {
+		return []byte{},err
+	}
+	return content, nil
 }
 
 //HTML parse should go to snap-plugin-processor ?
