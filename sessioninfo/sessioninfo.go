@@ -29,13 +29,14 @@ import (
 	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 	"encoding/xml"
+	"reflect"
 )
 
 const (
 	vendor        = "pan"
 	fs            = "sessioninfo"
 	pluginName    = "sessioninfo"
-	pluginVersion = 1
+	pluginVersion = 2
 	pluginType    = plugin.CollectorPluginType
 )
 
@@ -60,7 +61,7 @@ func NewDownloader(pg PageGetter) *Downloader {
 type Session struct {
 	XMLName xml.Name `xml:"response"`
 	Status  string `xml:"status,attr""`
-	Result  Result `xml:"result"`
+	Result Result `xml:"result"`
 }
 type Result struct {
 	Tmo_udp string `xml:"tmo-udp"`
@@ -146,13 +147,16 @@ htmlData, err := d.download("https://" + ip + "/esp/restapi.esp?type=op" + cmd +
 if err != nil {
 	return nil, fmt.Errorf("Error collecting metrics: %v", err)
 }
-//fmt.Println(htmlData)
-xml.Unmarshal(htmlData, &session)
-for _, mt := range mts {
-	ns := mt.Namespace()
 
+xml.Unmarshal(htmlData, &session)
+	//https://github.com/intelsdi-x/snap-plugin-lib-go/blob/master/examples/snap-plugin-collector-rand/rand/rand.go
+for _, mt := range mts {//idx
+	ns := mt.Namespace()
 	//val, err := parseSessionInfo("num-active", string(htmlData))
-	val := session.Result.Num_active //tmp until marshalling finished
+	//val := session.Result.Num_active //tmp until marshalling finished
+	//val := get_sub_field(session,"Result","Num_active")
+	val := get_sub_field(session,"Result",mt.Namespace()[2].Value)
+	//fmt.Println("DEBUG: ",idx, val,ns,mt.Namespace()[2].Value)
 	if err != nil {
 		return nil, fmt.Errorf("Error collecting metrics: %v", err)
 	}
@@ -191,7 +195,16 @@ func (d *Downloader) download(url string) ([]byte,error) {
 	}
 	return content, nil
 }
-
+func get_field(v Session, field string) string {
+	r := reflect.ValueOf(v)
+	f := reflect.Indirect(r).FieldByName(field)
+	return f.String()
+}
+func get_sub_field(v Session, field1 string, field2 string) string {
+	r := reflect.ValueOf(v)
+	f := reflect.Indirect(r).FieldByName(field1).FieldByName(field2)
+	return f.String()
+}
 //HTML parse should go to snap-plugin-processor ?
 /*func parseSessionInfo(tag string, htmlData string) (string, error) {
 htmlCode := strings.NewReader(htmlData)

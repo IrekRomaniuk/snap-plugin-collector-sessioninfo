@@ -26,11 +26,12 @@ import (
 	"github.com/intelsdi-x/snap/core/ctypes"
 	. "github.com/smartystreets/goconvey/convey"
 	"encoding/xml"
+
 )
 
 const (
 	//put your api key and ip address here
-	api = ""
+	api = "XXX"
 	ip  = "10.34.2.21"
 )
 
@@ -94,13 +95,14 @@ func TestSessioninfoFetch(t *testing.T) {
 	htmlData, _ := d.download("https://" + ip + "/esp/restapi.esp?type=op" + cmd + "&key=" + api)
 	var session Session
 	xml.Unmarshal(htmlData, &session)
-	//fmt.Println(session.Result.Kbps)
+
+	//fmt.Println(session.Result.Kbps, get_sub_field(session,"Result","Kbps"))
 	Convey("Sessioninfo download Kbps", t, func() {
-		So(session.Result.Kbps, ShouldEqual, 1519)
+		So(get_sub_field(session,"Result","Kbps"), ShouldEqual, 1519)
 	})
 }
 
-func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
+func TestSessioninfoCollector(t *testing.T) {
 	cfg := setupCfg(api, ip, "&cmd=<show><session><info/></session></show>")
 	//fmt.Println(api, ip)
 	Convey("Sessioninfo collector", t, func() {
@@ -109,13 +111,13 @@ func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		So(len(mt), ShouldEqual, 1)
+		So(len(mt), ShouldEqual, 33)
 
 		Convey("collect metrics", func() {
 			mts := []plugin.MetricType{
-				plugin.MetricType{
+				{
 					Namespace_: core.NewNamespace(
-						"pan", "sessioninfo", "num-active"),
+						"pan", "sessioninfo", "Num_active"),
 					Config_: cfg.ConfigDataNode,
 				},
 			}
@@ -127,8 +129,8 @@ func TestSessioninfoCollector_CollectMetrics(t *testing.T) {
 			So(metrics[0].Namespace()[0].Value, ShouldEqual, "pan")
 			So(metrics[0].Namespace()[1].Value, ShouldEqual, "sessioninfo")
 			for _, m := range metrics {
-				//fmt.Println(m.Namespace()[2].Value,m.Data())
-				So(m.Namespace()[2].Value, ShouldEqual, "num-active")
+				//fmt.Println("\n",m.Namespace()[2].Value,m.Data_)
+				So(m.Namespace()[2].Value, ShouldEqual, "Num_active")
 				t.Log(m.Namespace()[2].Value, m.Data())
 			}
 		})
