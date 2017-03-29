@@ -42,15 +42,7 @@ const (
 
 /*func init() {
 }*/
-var (
-	metricNames = []string{
-		"Tmo_udp,","Tmo_tcp","Pps","Num_max","Age_scan_thresh","Tmo_tcphalfclosed","Num_active","Dis_def",
-		"Num_mcast","Icmp_unreachable_rate","Tmo_tcptimewait", "Age_scan_ssf","Vardata_rate","Age_scan_tmo",
-		"Tmo_tcpinit","Dis_tcp","Num_udp","Tmo_icmp","Max_pending_mcast","age_accel_thresh","Tmo_tcphandshake",
-		"Tmo_def","Age_accel_tsf","Num_icmp","Num_predict","Tmo__cp","Tmo_tcp_unverif_rst","Num_bcast",
-		"Num_installed", "Num_tcp","Dis_udp","Cps","Kbps",
-	}
-)
+
 type PageGetter func(url string) ([]byte, error)
 type Downloader struct {
 	get_page PageGetter
@@ -63,6 +55,15 @@ type Session struct {
 	Status  string `xml:"status,attr""`
 	Result Result `xml:"result"`
 }
+var (
+	metricNames = []string{
+		"Tmo_udp","Tmo_tcp","Pps","Num_max","Age_scan_thresh","Tmo_tcphalfclosed","Num_active","Dis_def",
+		"Num_mcast","Icmp_unreachable_rate","Tmo_tcptimewait", "Age_scan_ssf","Vardata_rate","Age_scan_tmo",
+		"Tmo_tcpinit","Dis_tcp","Num_udp","Tmo_icmp","Max_pending_mcast","Age_accel_thresh","Tmo_tcphandshake",
+		"Tmo_def","Age_accel_tsf","Num_icmp","Num_predict","Tmo_cp","Tmo_tcp_unverif_rst","Num_bcast",
+		"Num_installed", "Num_tcp","Dis_udp","Cps","Kbps",
+	}
+)
 type Result struct {
 	Tmo_udp string `xml:"tmo-udp"`
 	Tmo_tcp string `xml:"tmo-tcp"`
@@ -83,7 +84,7 @@ type Result struct {
 	Num_udp string `xml:"num-udp"`
 	Tmo_icmp string `xml:"tmo-icmp"`
 	Max_pending_mcast string `xml:"max-pending-mcast"`
-	age_accel_thresh string `xml:"age-accel-thresh"`
+	Age_accel_thresh string `xml:"age-accel-thresh"`
 	Tmo_tcphandshake string `xml:"tmo-tcphandshake"`
 	Tmo_def string `xml:"tmo-def"`
 	Age_accel_tsf string `xml:"age-accel-tsf"`
@@ -152,7 +153,6 @@ xml.Unmarshal(htmlData, &session)
 	//https://github.com/intelsdi-x/snap-plugin-lib-go/blob/master/examples/snap-plugin-collector-rand/rand/rand.go
 for _, mt := range mts {//idx
 	ns := mt.Namespace()
-	//val, err := parseSessionInfo("num-active", string(htmlData))
 	//val := session.Result.Num_active //tmp until marshalling finished
 	//val := get_sub_field(session,"Result","Num_active")
 	val := get_sub_field(session,"Result",mt.Namespace()[2].Value)
@@ -170,7 +170,7 @@ for _, mt := range mts {//idx
 }
 return metrics, nil
 }
-
+//fetching url and return html, can be mocked for testing
 func get_page(url string) ([]byte, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -187,7 +187,7 @@ func get_page(url string) ([]byte, error) {
 	resp.Body.Close()
 	return htmlData, nil
 }
-//fetching url and return content
+//dependency injection for fetching url func get_page(url)
 func (d *Downloader) download(url string) ([]byte,error) {
 	content, err := d.get_page(url)
 	if err != nil {
@@ -195,26 +195,18 @@ func (d *Downloader) download(url string) ([]byte,error) {
 	}
 	return content, nil
 }
+//Get struct field value
 func get_field(v Session, field string) string {
 	r := reflect.ValueOf(v)
 	f := reflect.Indirect(r).FieldByName(field)
 	return f.String()
 }
+//Get named substruct field value
 func get_sub_field(v Session, field1 string, field2 string) string {
 	r := reflect.ValueOf(v)
 	f := reflect.Indirect(r).FieldByName(field1).FieldByName(field2)
 	return f.String()
 }
-//HTML parse should go to snap-plugin-processor ?
-/*func parseSessionInfo(tag string, htmlData string) (string, error) {
-htmlCode := strings.NewReader(htmlData)
-doc, err := goquery.NewDocumentFromReader(htmlCode)
-if err != nil {
-	return "", err
-}
-s := doc.Find(tag).Text()
-return s, nil
-}*/
 
 /*
 GetMetricTypes returns metric types for testing.
