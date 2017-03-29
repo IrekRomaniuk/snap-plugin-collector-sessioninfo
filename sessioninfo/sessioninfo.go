@@ -90,7 +90,7 @@ type Result struct {
 	Age_accel_tsf string `xml:"age-accel-tsf"`
 	Num_icmp string `xml:"num-icmp"`
 	Num_predict string `xml:"num-predict"`
-	Tmo__cp string `xml:"tmo-cp"`
+	Tmo_cp string `xml:"tmo-cp"`
 	Tmo_tcp_unverif_rst string `xml:"tmo-tcp-unverif-rst"`
 	Num_bcast string`xml:"num-bcast"`
 	Num_installed string `xml:"num-installed"`
