@@ -193,7 +193,7 @@ This plugin is Open Source software released under the Apache 2.0 [License](LICE
 ## Releases
 ### Version 2
 
-Initial release
+[Second release](https://medium.com/@IrekRomaniuk/pan-sessioninfo-version-2-e2d835a007d1)
 
 ### TODO
 
