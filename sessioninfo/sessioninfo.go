@@ -146,17 +146,12 @@ if err != nil {
 }
 
 xml.Unmarshal(htmlData, &session)
-	//https://github.com/intelsdi-x/snap-plugin-lib-go/blob/master/examples/snap-plugin-collector-rand/rand/rand.go
 for _, mt := range mts {//idx
 	ns := mt.Namespace()
-	//val := session.Result.Num_active //tmp until marshalling finished
-	//val := get_sub_field(session,"Result","Num_active")
 	val := get_sub_field(session,"Result",mt.Namespace()[2].Value)
-	//fmt.Println("DEBUG: ",idx, val,ns,mt.Namespace()[2].Value)
 	if err != nil {
 		return nil, fmt.Errorf("Error collecting metrics: %v", err)
 	}
-	//fmt.Println(val)
 	metric := plugin.MetricType{
 		Namespace_: ns,
 		Data_:      val,

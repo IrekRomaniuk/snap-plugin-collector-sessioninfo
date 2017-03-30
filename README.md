@@ -51,7 +51,7 @@ List available plugins
 ```
 $ snaptel plugin list
 NAME                             VERSION         TYPE            SIGNED          STATUS          LOADED TIME
-sessioninfo                      1               collector       false           loaded          Fri, 02 Dec 2016 15:00:51 EST
+sessioninfo                      2               collector       false           loaded          Fri, 02 Dec 2016 15:00:51 EST
 ```
 See available metrics for your system
 ```
