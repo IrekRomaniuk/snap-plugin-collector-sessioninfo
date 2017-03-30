@@ -1,10 +1,8 @@
-hash: c47c971caba9b8a3eaf933ea05470560493e664b7ec5020885eb9c22f6ab77ba
-updated: 2016-12-05T17:01:33.491354153+01:00
+hash: 5ef7f116b37041867dda9c1918f2785138d4e8fa900412b630961bea77fb69ea
+updated: 2017-03-30T10:24:16.809877-04:00
 imports:
-- name: github.com/andybalholm/cascadia
-  version: 65919c611220063037b1db8eb334acaf17a6d8ea
 - name: github.com/intelsdi-x/snap
-  version: 8905198aaab5bfb6d50a747477ca401e3a7a33ab
+  version: c98bf6658761dc330431c118dee1a069deb90bab
   subpackages:
   - control/plugin
   - control/plugin/cpolicy
@@ -15,40 +13,34 @@ imports:
   - core/ctypes
   - core/serror
   - pkg/ctree
+  - pkg/fileutils
   - pkg/schedule
   - pkg/stringutils
   - scheduler/wmap
-- name: github.com/PuerkitoBio/goquery
-  version: 56a198aba89cdf7a612e6c762eff9d788b9f2dae
 - name: github.com/robfig/cron
-  version: 9585fd555638e77bba25f25db5c44b41f264aeb7
+  version: 32d9c273155a0506d27cf73dd1246e86a470997e
 - name: github.com/Sirupsen/logrus
-  version: 881bee4e20a5d11a6a88a5667c6f292072ac1963
-- name: golang.org/x/net
-  version: 6cdc0daab091c43fc46193327e0047b4f883c613
-  subpackages:
-  - html
-  - html/atom
+  version: be52937128b38f1d99787bb476c789e2af1147f1
 - name: golang.org/x/sys
-  version: f5a6bd43051d3f1f5dd3e0dbd531721aa5e75d28
+  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
   subpackages:
   - unix
 - name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+  version: c1cd2254a6dd314c9d73c338c12688c9325d85c6
 testImports:
 - name: github.com/gopherjs/gopherjs
-  version: e34a5cd6a1bc7c4fde759f2d3039852fc68b5fcc
+  version: 3496c6f94e1b945f3fc9580f6982675c0a74cd6c
   subpackages:
   - js
 - name: github.com/jtolds/gls
-  version: 8ddce2a84170772b95dd5d576c48d517b22cac63
+  version: bb0351aa7eb6f322f32667d51375f26a2bca6628
 - name: github.com/smartystreets/assertions
-  version: e60cfa771e3f4d18723a4119f1833898c9c62066
+  version: c9ee7d9e9a2aeec0bee7c4a516f3e0ad7cb7e558
   subpackages:
   - internal/go-render/render
   - internal/oglematchers
 - name: github.com/smartystreets/goconvey
-  version: d4c757aa9afd1e2fc1832aaab209b5794eb336e1
+  version: 3bd662eac601ad6436e64776af2e112069eb2edc
   subpackages:
   - convey
   - convey/gotest
