@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [2] - 2017-30-03
 ### Added
-- new metrics, [see here](METRICS.md).
+- new metrics added, [see here](METRICS.md).
 
 ### Changed
 - num-active metric name to Num_active

@@ -39,9 +39,6 @@ const (
 	pluginType    = plugin.CollectorPluginType
 )
 
-/*func init() {
-}*/
-
 type PageGetter func(url string) ([]byte, error)
 type Downloader struct {
 	get_page PageGetter

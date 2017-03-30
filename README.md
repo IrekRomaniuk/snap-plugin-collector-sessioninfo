@@ -65,7 +65,7 @@ version: 1
 schedule:
   type: "simple"
   interval: "30s"
-max-failures: 10
+max-failures: 15
 workflow:
   collect:
     metrics:

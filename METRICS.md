@@ -34,4 +34,4 @@
 | /pan/sessioninfo/Vardata_rate              | int   |                                                             | :x:                |
 | /pan/sessioninfo/Age_accel_thresh          | int   |                                                             | :x:                |
 
-(*1) Dynamic metric is changing value, versus Staic which is configurable
+(*1) Dynamic metric is changing value, versus Static which is configurable

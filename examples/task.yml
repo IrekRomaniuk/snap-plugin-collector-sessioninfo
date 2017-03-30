@@ -59,4 +59,4 @@ workflow:
           password: "admin"
           https: false
           skip-verify: false
-          retention: ten_weeks
+          retention: default

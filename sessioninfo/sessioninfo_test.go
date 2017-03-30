@@ -87,7 +87,7 @@ func TestSessioninfoPlugin(t *testing.T) {
 func mock_get_page(url string) ([]byte, error){
 	return []byte(sessioninfo_response), nil
 }
-
+// test session info fetch by looking at Kbps field
 func TestSessioninfoFetch(t *testing.T) {
 	cmd := "&cmd=<show><session><info/></session></show>"
 	d := NewDownloader(mock_get_page)
