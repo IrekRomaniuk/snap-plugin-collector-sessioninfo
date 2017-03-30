@@ -32,7 +32,7 @@ import (
 const (
 	//put your api key and ip address here
 	api = "XXX"
-	ip  = "10.34.2.21"
+	ip  = ""
 )
 
 func TestSessioninfoPlugin(t *testing.T) {
