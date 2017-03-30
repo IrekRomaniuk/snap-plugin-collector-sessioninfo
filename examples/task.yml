@@ -6,12 +6,48 @@ max-failures: 10
 workflow:
   collect:
     metrics:
-      /pan/sessioninfo/num-active: {}
+      /pan/sessioninfo/Age_accel_tsf:           {}
+      /pan/sessioninfo/Age_scan_ssf:            {}
+      /pan/sessioninfo/Age_scan_thresh:         {}
+      /pan/sessioninfo/Age_scan_tmo:            {}
+      /pan/sessioninfo/Cps:                     {}
+      /pan/sessioninfo/Dis_def:                 {}
+      /pan/sessioninfo/Dis_tcp:                 {}
+      /pan/sessioninfo/Dis_udp:                 {}
+      /pan/sessioninfo/Icmp_unreachable_rate:   {}
+      /pan/sessioninfo/Kbps:                    {}
+      /pan/sessioninfo/Max_pending_mcast:       {}
+      /pan/sessioninfo/Num_active:              {}
+      /pan/sessioninfo/Num_bcast:               {}
+      /pan/sessioninfo/Num_icmp:                {}
+      /pan/sessioninfo/Num_installed:           {}
+      /pan/sessioninfo/Num_max:                 {}
+      /pan/sessioninfo/Num_mcast:               {}
+      /pan/sessioninfo/Num_predict:             {}
+      /pan/sessioninfo/Num_tcp:                 {}
+      /pan/sessioninfo/Num_udp:                 {}
+      /pan/sessioninfo/Pps:                     {}
+      /pan/sessioninfo/Tmo_cp:                  {}
+      /pan/sessioninfo/Tmo_def:                 {}
+      /pan/sessioninfo/Tmo_icmp:                {}
+      /pan/sessioninfo/Tmo_tcp:                 {}
+      /pan/sessioninfo/Tmo_tcp_unverif_rst:     {}
+      /pan/sessioninfo/Tmo_tcphalfclosed:       {}
+      /pan/sessioninfo/Tmo_tcphandshake:        {}
+      /pan/sessioninfo/Tmo_tcpinit:             {}
+      /pan/sessioninfo/Tmo_tcptimewait:         {}
+      /pan/sessioninfo/Tmo_udp:                 {}
+      /pan/sessioninfo/Vardata_rate:            {}
+      /pan/sessioninfo/Age_accel_thresh:        {}
     config:
       /pan/sessioninfo:
         api: ""
         ip: ""
         cmd: "&cmd=<show><session><info/></session></show>"
+    tags:
+      /pan/sessioninfo/:
+        site: "DC1"
+        id: "2"
     publish:
       -
         plugin_name: "influxdb"
@@ -19,8 +55,8 @@ workflow:
           host: "localhost"
           port: 8086
           database: "test"
-          retention: "default"
           user: "admin"
           password: "admin"
           https: false
           skip-verify: false
+          retention: ten_weeks
