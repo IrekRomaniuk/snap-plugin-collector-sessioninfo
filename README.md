@@ -185,7 +185,7 @@ NAMESPACE                                DATA            TIMESTAMP
 /pan/sessioninfo/Vardata_rate            10485760        2017-03-30 09:05:41.416428421 -0400 EDT
 ```
 Watch metrics in real-time using [snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/) 
-and use InfluxDB plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to InfluxDB")
+and use InfluxDB plugin for publishing ![Alt text](examples/grafana-sessioninfo2.JPG "Metrics published to InfluxDB")
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
