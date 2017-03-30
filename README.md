@@ -126,7 +126,7 @@ workflow:
 ```
 Load sessioninfo plugin for publishing:
 ```
-$ snaptel plugin load snap-plugin-publisher-sessioninfo
+$ snaptel plugin load snap-plugin-publisher-influxdb
 ```
 
 Create a task:
@@ -184,8 +184,8 @@ NAMESPACE                                DATA            TIMESTAMP
 /pan/sessioninfo/Tmo_udp                 30              2017-03-30 09:05:41.416427242 -0400 EDT
 /pan/sessioninfo/Vardata_rate            10485760        2017-03-30 09:05:41.416428421 -0400 EDT
 ```
-Watch metrics in real-time using [snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/) 
-and use InfluxDB plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to InfluxDB")
+Watch metrics in real-time using [Snap plugin for Grafana] (https://blog.raintank.io/using-grafana-with-intels-snap-for-ad-hoc-metric-exploration/) 
+and use sessioninfo plugin for publishing ![Alt text](examples/grafana-sessioninfo.JPG "Metrics published to influxdb")
 
 ## License
 This plugin is Open Source software released under the Apache 2.0 [License](LICENSE).
