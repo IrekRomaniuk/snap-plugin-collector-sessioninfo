@@ -98,7 +98,7 @@ func TestSessioninfoFetch(t *testing.T) {
 
 	//fmt.Println(session.Result.Kbps, get_sub_field(session,"Result","Kbps"))
 	Convey("Sessioninfo download Kbps", t, func() {
-		So(get_sub_field(session,"Result","Kbps"), ShouldEqual, 1519)
+		So(get_sub_field(session,"Result","Kbps"), ShouldEqual, "1519")
 	})
 }
 
