@@ -23,7 +23,6 @@ import (
 	"net/http"
 	"time"
 
-	//"github.com/PuerkitoBio/goquery"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
 	"github.com/intelsdi-x/snap/core"
